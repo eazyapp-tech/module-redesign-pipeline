@@ -63,9 +63,16 @@ e.g. "Adopted Food's cohesive-header recipe per user request 2026-07-07."
 One line per session, oldest first:
 <session-id> · <worktree/branch> · <one-line: what happened>
 
+## Verify Recipe (tooling gotchas — ours, not the code's)
+Dev-server port, test login (phone/OTP + known quirks like non-auto-submitting OTP
+or mobile-viewport route redirects), persistent browser-profile path, viewport matrix.
+Code-truth gotchas go in the repo's COMPONENT-REGISTRY.md instead.
+
 ## Next Steps
 What the next resumed session should do first.
 ```
+
+> Companion artifact: the repo's `docs/design/COMPONENT-REGISTRY.md` (see `component-registry-template.md`) — components, conventions, do-NOT-copy list, dated code gotchas. The ledger records this module's *process*; the registry records the repo's *reusable surface*. Round close updates both.
 
 ---
 

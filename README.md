@@ -10,11 +10,12 @@ Every phase, gate, and standing rule in this skill is mined from **66+ real rede
 
 Runs an ordered, looping pipeline: **frame → ground the codebase → reference (conditional) → check the house design language → scored audit → plan → build → motion pass → live verify + instrument → dual+1 final gate → ship.** Phases 3–8 repeat as rounds driven by the user's real feedback — real modules took 2–8 rounds. It orchestrates other skills (`impeccable`, `interface-design`, `emil-design-eng`, `playwright`, `web-design-guidelines`, `code-review`) rather than replacing them, and adds the connective tissue those don't cover on their own: the per-module memory ledger, the pre-code design lock, the instrumented verification gate, and a named human merge owner.
 
-Four ideas do the heavy lifting:
+Five ideas do the heavy lifting:
 1. **Ground before you touch pixels** — map the real module first; only reach outside (Mobbin, for real reference screens from best-in-class apps) when there's genuinely no internal precedent.
 2. **The user is the real final gate, not the skills** — verbatim rejections get logged and carried forward, not paraphrased into something softer.
 3. **Nothing is "done" without live proof** — a real login, a real viewport, a real screenshot. This is the single highest-volume activity in every real session behind this skill.
 4. **Wired gates, not shelf inventory** — an audit of the source sessions found most installed design tooling was never invoked. This skill makes the gates *mandatory in the phases*, not optional add-ons: untraced = unmeasured = unverified.
+5. **Grounding accumulates in a component registry, not in session context** — the origin sessions re-ran the same "map the canonical components" agents every session and discarded the answers. The pipeline maintains a per-repo `COMPONENT-REGISTRY.md` (canonical components with when-NOT-to-use notes, a do-NOT-copy legacy list, house conventions, dated code gotchas): registry-check before any new component at build, registry pay-back at every round close. Reuse with judgment, indexed — never blind copying.
 
 ## The gates (what "done" actually requires)
 
@@ -61,7 +62,8 @@ Mobbin MCP (reference screens) and the skills it orchestrates (`impeccable`, `in
 |---|---|
 | `module-redesign-pipeline/SKILL.md` | The orchestrator — the phase pipeline, the one hard gate, platform profiles, design principles, red flags (rationalization counters), known gaps, and how it composes with `feature-design-pipeline`. |
 | `module-redesign-pipeline/PLAYBOOK.md` | Human-readable playbook — the pipeline linearly with the evidence per phase, and the round loop. Read/share this. |
-| `module-redesign-pipeline/references/redesign-ledger-template.md` | The `project_<module>-redesign.md` structure to copy for a new module — Platform Profile, House Rules, Performance Budget, Decisions Locked, Round N Feedback, Session Lineage, and the resume-prompt shape. |
+| `module-redesign-pipeline/references/redesign-ledger-template.md` | The `project_<module>-redesign.md` structure to copy for a new module — Platform Profile, House Rules, Performance Budget, Decisions Locked, Round N Feedback, Verify Recipe, Session Lineage, and the resume-prompt shape. |
+| `module-redesign-pipeline/references/component-registry-template.md` | The per-repo `docs/design/COMPONENT-REGISTRY.md` structure — canonical components (use / when-NOT-to-use / gotchas), layout recipes, tokens & hooks, house conventions, do-NOT-copy legacy list, extraction candidates, dated learnings. Lives in the target repo, versioned with the code. |
 
 ## Relationship to feature-design-pipeline
 

@@ -29,9 +29,18 @@ The two pipelines also compose mid-project: when Phase 3 uncovers a backend prer
 
 Don't skip this because the module already exists — "it exists" is not the same as "the redesign's scope is agreed."
 
-## Phase 1 — Ground (`Explore` subagents, parallel)
+## Phase 1 — Ground (registry first, then `Explore` subagents in parallel)
 
-Fan out 2–5 read-only subagents: map the module end-to-end, characterize the house design system (usually anchored on one flagship surface — in RentOk's case, HomeV2), trace the exact data shapes the redesign will touch. Observed dispatch titles: "Map Reviews module end-to-end," "Characterize homescreen design system," "Ground Attendance data shapes," "Map canonical section header pattern."
+**Read the repo's `COMPONENT-REGISTRY.md` first** (template: `references/component-registry-template.md`), and verify the entries this module will touch — paths still real, components unchanged. A stale registry is worse than none, same as stale grounding.
+
+Then fan out 2–5 read-only subagents for what the registry doesn't cover: this module's own end-to-end flow, the real data shapes, the house design system where unindexed. Observed dispatch titles: "Map Reviews module end-to-end," "Characterize homescreen design system," "Ground Attendance data shapes," "Map canonical section header pattern."
+
+Here's the failure this fixes: those dispatch titles repeated **across sessions** — the same canonical-header and reusable-kit maps were re-derived again and again, then discarded with each session's context. The registry is where those answers accumulate. Anything reusable an Explore agent finds gets written into it; a repo with no registry yet gets one seeded from this phase's output.
+
+**Three knowledge layers, kept distinct:**
+1. **Component registry** (in the repo, versioned, team-visible) — canonical components with when-NOT-to-use notes, layout recipes, tokens/hooks, conventions, the do-NOT-copy legacy list, dated code-truth gotchas.
+2. **Module ledger** (memory) — this module's decisions, rounds, verbatim feedback, session lineage.
+3. **Tooling gotchas** (ledger's verify recipe) — dev-server login quirks, viewport routing, OTP behavior. About our tools, not the code — they don't belong in the repo.
 
 ## Phase 1.5 — Reference (Mobbin MCP — conditional)
 
@@ -59,7 +68,9 @@ Turn the locked design into a task-by-task implementation plan. This is where th
 
 Execute the plan with a strict per-task loop, each step its own `general-purpose` subagent: Implement Task N → Review Task N (spec + quality) → Fix (if the review finds something) → Re-review. This discipline is what prevents a fast build from silently drifting off the locked spec.
 
-Reuse existing components and services (Rooms, Dues, Collections, Expenses, shared UI primitives) rather than parallel-inventing them — this is the same "don't copy blindly, but don't rebuild blindly either" instinct applied to code, not just visuals.
+Reuse existing components and services (Rooms, Dues, Collections, Expenses, shared UI primitives) rather than parallel-inventing them — this is the same "don't copy blindly, but don't rebuild blindly either" instinct applied to code, not just visuals. Concretely: **registry check before any new component** — found → adapt per its notes; on the do-NOT-copy list → use the named replacement; absent → one Explore confirm, then build. Put the registry's relevant entries directly into each build subagent's prompt — a subagent that can't see the registry will parallel-invent with full confidence.
+
+At round close, the registry gets paid back: new reusables registered, gotchas dated, near-duplicates logged as extraction candidates (3+ call sites → extract to canonical). The registry is the *index*; extraction is the *refactor* — index first, extract when demand proves it.
 
 ## Phase 6 — Motion (`emil-design-eng`)
 
