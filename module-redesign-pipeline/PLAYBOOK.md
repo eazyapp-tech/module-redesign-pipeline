@@ -68,7 +68,7 @@ Also produced here: the **feature-parity matrix** — one Explore dispatch ("Bui
 
 ## Phase 3.5 — Propose & lock (`artifact-design`)
 
-The audit says what's wrong with the *old* module — it is not the new design. Present the proposed redesign direction **per surface as rendered artifacts** (`artifact-design` fired at exactly this seam in six-plus origin sessions — artifacts are what replaced Figma here): IA, layout, states, key copy. **The user approving that artifact is the pre-code lock** — hard gate #1. Log the approved spec in the ledger's §IA SIGNED OFF, per surface. *"Lock the design with the user BEFORE coding — the user is design-exacting. No coding yet — 1st plan & brainstorm & lock it with me."*
+The audit says what's wrong with the *old* module — it is not the new design. Present the proposed redesign direction **per surface as rendered artifacts** (`artifact-design` fired at exactly this seam in six-plus origin sessions — artifacts are what replaced Figma here): IA, layout, states, key copy. The medium follows the platform profile — web HTML artifacts for web, but for a Flutter/native surface use `imagegen-frontend-mobile` phone-framed comps, because web HTML doesn't represent a native screen. **The user approving that artifact is the pre-code lock** — hard gate #1. Log the approved spec in the ledger's §IA SIGNED OFF, per surface. *"Lock the design with the user BEFORE coding — the user is design-exacting. No coding yet — 1st plan & brainstorm & lock it with me."*
 
 ## Phase 4 — Plan (`superpowers:writing-plans`)
 
