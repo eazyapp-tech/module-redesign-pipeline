@@ -1,6 +1,6 @@
 # module-redesign-pipeline
 
-A reusable Claude Code **skill** that turns "this module looks generic / dated / not top 1%" into a shipped, live-verified redesign of an **existing** screen or section — grounded in the module's real code, benchmarked against real reference products, gated by a scored audit and real performance traces, and never accepted on a claim alone.
+A reusable Claude Code **skill** that turns "this module looks generic / dated / not top 1%" into a shipped, live-verified redesign of an **existing** screen or section — grounded in the module's real code, benchmarked against real reference products where no internal precedent exists, gated by a scored audit and real performance traces, and never accepted on a claim alone.
 
 > Redesigns an EXISTING surface end-to-end, through build and ship. Not a new-feature-scoping skill — see [feature-design-pipeline](https://github.com/eazyapp-tech/feature-design-pipeline) for that.
 
@@ -8,7 +8,7 @@ Every phase, gate, and standing rule in this skill is mined from **66+ real rede
 
 ## What it does
 
-Runs an ordered, looping pipeline: **frame → ground the codebase → reference (conditional) → check the house design language → scored audit → plan → build → motion pass → live verify + instrument → dual+1 final gate → ship.** Phases 3–8 repeat as rounds driven by the user's real feedback — real modules took 2–8 rounds. It orchestrates other skills (`impeccable`, `interface-design`, `emil-design-eng`, `playwright`, `web-design-guidelines`, `code-review`) rather than replacing them, and adds the connective tissue those don't cover on their own: the per-module memory ledger, the pre-code design lock, the instrumented verification gate, and a named human merge owner.
+Runs an ordered, looping pipeline: **frame → ground the codebase → reference (conditional) → check the house design language → scored audit → propose & lock (rendered artifact) → plan → build → motion pass → live verify + instrument → final gate (acceptance round) → ship.** Phases 3–8 repeat as rounds driven by the user's real feedback — real modules took 2–8 rounds. It orchestrates other skills (`impeccable`, `interface-design`, `emil-design-eng`, `playwright`, `web-design-guidelines`, `code-review`) rather than replacing them, and adds the connective tissue those don't cover on their own: the per-module memory ledger, the pre-code design lock, the instrumented verification gate, and a named human merge owner.
 
 Five ideas do the heavy lifting:
 1. **Ground before you touch pixels** — map the real module first; only reach outside (Mobbin, for real reference screens from best-in-class apps) when there's genuinely no internal precedent.
@@ -22,9 +22,9 @@ Five ideas do the heavy lifting:
 | Phase | Gate | Tools |
 |---|---|---|
 | 3 — Audit | Scored, no-code audit before any build | `impeccable` (Nielsen's 10 heuristics × 0–4, /40) |
-| 4 — Plan | Design locked **with the user** before code | — |
+| 3.5 — Propose & lock | The user approves a **rendered artifact** (`artifact-design`) per surface — that approval IS the pre-code lock | `artifact-design` |
 | 7 — Live verify + instrument | Visual proof AND measured performance vs a per-module budget (LCP < 2.5s · INP < 200ms · CLS < 0.1 defaults) | Web: `playwright` + **Chrome DevTools MCP** trace + `npx react-scan` + axe scan. Flutter: golden tests + `integration_test` + DevTools `--profile` overlay |
-| 8 — Final gate (dual+1, parallel) | Design-craft, guidelines-compliance, and code-quality graded **separately** | `impeccable` ×2 independent + `web-design-guidelines` (mandatory, web) + `code-review --high` (8 angles) + a fresh context-free reviewer |
+| 8 — Final gate (parallel, acceptance rounds only) | Design-craft, guidelines-compliance, and code-quality graded **separately** | `impeccable` ×2 independent + `web-design-guidelines` (mandatory, web) + `code-review --high` (8 angles) + a fresh context-free reviewer |
 | 9 — Ship | A named human merge owner, not just the automated gates | `finishing-a-development-branch` |
 
 ## Platform profiles
@@ -62,22 +62,22 @@ Mobbin MCP (reference screens) and the skills it orchestrates (`impeccable`, `in
 |---|---|
 | `module-redesign-pipeline/SKILL.md` | The orchestrator — the phase pipeline, the one hard gate, platform profiles, design principles, red flags (rationalization counters), known gaps, and how it composes with `feature-design-pipeline`. |
 | `module-redesign-pipeline/PLAYBOOK.md` | Human-readable playbook — the pipeline linearly with the evidence per phase, and the round loop. Read/share this. |
-| `module-redesign-pipeline/references/redesign-ledger-template.md` | The `project_<module>-redesign.md` structure to copy for a new module — Platform Profile, House Rules, Performance Budget, Decisions Locked, Round N Feedback, Verify Recipe, Session Lineage, and the resume-prompt shape. |
+| `module-redesign-pipeline/references/redesign-ledger-template.md` | The `project_<module>-redesign.md` structure to copy for a new module — the observed section vocabulary (§IA SIGNED OFF, §BACKEND SCOPE, Surface Status, Shared-Surface Playbook, Verify Recipe...), the emoji/prepend-to-top living conventions, and the resume-prompt shape. |
 | `module-redesign-pipeline/references/component-registry-template.md` | The per-repo `docs/design/COMPONENT-REGISTRY.md` structure — canonical components (use / when-NOT-to-use / gotchas), layout recipes, tokens & hooks, house conventions, do-NOT-copy legacy list, extraction candidates, dated learnings. Lives in the target repo, versioned with the code. |
 
 ## Relationship to feature-design-pipeline
 
 They compose at two points, not just "similar but different":
 
-- **A brand-new module redesign opens by invoking [feature-design-pipeline](https://github.com/eazyapp-tech/feature-design-pipeline) itself** — real kickoffs (Reviews, Tasks, Change Room) all did this. Only its framing phase runs; its document stack (`brief`, `pre-mortem`, `domain-modeling`, `doc-handoff-review`) never fires here, because the module already exists and the scored audit in this pipeline serves as the spec.
+- **A brand-new module redesign opens by invoking [feature-design-pipeline](https://github.com/eazyapp-tech/feature-design-pipeline) itself** — real kickoffs (Reviews, Tasks, Change Room) all did this. Only its framing steps run, inline (the full skill is not invoked); its document stack (`brief`, `pre-mortem`, `domain-modeling`, `grilling`, `doc-handoff-review`) never fires here, because the module already exists and the scored audit in this pipeline serves as the spec.
 - **A backend prereq uncovered mid-redesign that's too large to build directly** (a new data model, a vendor integration, anything touching money/legal) hands off to a full `feature-design-pipeline` run as its own workstream — this pipeline resumes once it ships.
 
 | | feature-design-pipeline | module-redesign-pipeline |
 |---|---|---|
 | Starting point | A feature that doesn't exist yet | A module/screen that already exists and looks bad |
 | Ends at | Design docs (brief + spec + pre-mortem), handoff to a plan | A shipped, live-verified, merged redesign |
-| Core loop | Linear: frame → ground → research → spec → lock → persist | Looping rounds: audit → build → motion → verify+instrument → gate, repeated until accepted |
-| Gate | User approves the design docs | Scored `impeccable` audit (/40) + instrumented perf budget + dual+1 final gate + named human merge owner |
+| Core loop | Linear: frame → ground → research → spec → lock → persist | Looping rounds: audit → lock (rendered artifact) → build → motion → verify+instrument, repeated; full gate on the acceptance round |
+| Gate | User approves the design docs | Scored `impeccable` audit (/40) + instrumented perf budget + three-dimension final gate + named human merge owner |
 
 ## Known gaps (deliberate, documented in the skill)
 

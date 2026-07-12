@@ -1,6 +1,6 @@
 # Component Registry — `<repo/app name>` Template
 
-Copy this into the target repo as `docs/design/COMPONENT-REGISTRY.md` (or repo root, next to DESIGN.md/PRODUCT.md). It lives **in the repo, versioned with the code** — team-visible, not trapped in Claude memory. This is the index that makes "reuse, don't recreate" cheap and reliable; the ledger stays the per-module process record.
+Copy this into the target repo as `docs/design/COMPONENT-REGISTRY.md` (that exact path — Phase 1 reads it there). It lives **in the repo, versioned with the code** — team-visible, not trapped in Claude memory. This is the index that makes "reuse, don't recreate" cheap and reliable; the ledger stays the per-module process record.
 
 > **Read before building ANY new UI element. Update at every round close.**
 > A stale registry is worse than none — every entry cites a real path; verify the paths you're about to rely on before trusting them (Phase 1 does this for the module's surface).
