@@ -24,7 +24,7 @@ Five ideas do the heavy lifting:
 | 3 — Audit | Scored, no-code audit before any build | `impeccable` (Nielsen's 10 heuristics × 0–4, /40) |
 | 3.5 — Propose & lock | The user approves a **rendered artifact** (`artifact-design`) per surface — that approval IS the pre-code lock | `artifact-design` |
 | 7 — Live verify + instrument | Visual proof AND measured performance vs a per-module budget (LCP < 2.5s · INP < 200ms · CLS < 0.1 defaults) | Web: `playwright` + **Chrome DevTools MCP** trace + `npx react-scan` + axe scan. Flutter: golden tests + `integration_test` + DevTools `--profile` overlay |
-| 8 — Final gate (parallel, acceptance rounds only) | Design-craft, guidelines-compliance, and code-quality graded **separately** | `impeccable` ×2 independent + `web-design-guidelines` (mandatory, web) + `code-review --high` (8 angles) + a fresh context-free reviewer |
+| 8 — Final gate (parallel, acceptance rounds only) | Design-craft, guidelines-compliance, motion-craft, and code-quality graded **separately** | `impeccable` ×2 independent + `web-design-guidelines` (mandatory, web) + `review-animations` (if the round touched motion) + `code-review --high` (8 angles) + a fresh context-free reviewer |
 | 9 — Ship | A named human merge owner, not just the automated gates | `finishing-a-development-branch` |
 
 ## Platform profiles

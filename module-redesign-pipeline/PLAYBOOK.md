@@ -11,8 +11,10 @@ Ask → [0] Frame → [1] Ground → [1.5] Reference → [2] Design-lang → [3]
        fdp framing    registry +     Mobbin MCP      obsidian/         impeccable     artifact-   writing-  interface-    emil-       playwright +       impeccable×2 +     finishing-a-
        inline, or     Explore        (only if no      DESIGN.md         (scored /40)   design      plans     design via    design-eng  DevTools trace +   web-design-        dev-branch
        brainstorming  subagents      internal          PRODUCT.md        + parity       render =              subagent-                react-scan + axe   guidelines +       (+ post-merge
-       (new screen)   (parallel)     precedent)                          matrix         THE LOCK              driven-dev                                  code-review +      audit)
-                                                                                                                                                          code-reviewer
+       (new screen)   (parallel)     precedent)                          matrix         THE LOCK              driven-dev    + review-      react-scan + axe   review-animations
+                                                                                                                            animations                       (if motion) +
+                                                                                                                            gate @[8]                        code-review +
+                                                                                                                                                             code-reviewer
                                         ↑ phases 3–8 loop as ROUNDS; interim rounds end at [7]; [8] runs on the acceptance round ↑
 ```
 
@@ -82,9 +84,11 @@ The parent loads `interface-design`; execution fans to `general-purpose` subagen
 
 **After a parallel multi-surface rebuild, run one hygiene subagent** ("Hygiene refactor shared helpers" closed Reviews Round 2) to dedupe the helpers the parallel builders just duplicated — *before* the round's verify. Parallel building creates duplicates by construction; don't wait for the registry's "3+ call sites" bar within a single round.
 
-## Phase 6 — Motion (`emil-design-eng`)
+## Phase 6 — Motion (`emil-design-eng`, + the emil motion pack)
 
-Micro-interaction pass — autosave indicators, popovers, tactile swipe rows. `apple-design`, `animation-vocabulary`, `review-animations`, `improve-animations` are deeper motion tooling for when needs exceed `emil-design-eng`'s coverage (they weren't part of the origin sessions).
+Micro-interaction pass — autosave indicators, popovers, tactile swipe rows. `emil-design-eng` builds and directs; `apple-design` is the standing principles reference (springs, interruptibility, gesture correctness) for any gesture-heavy or mobile surface, not only Flutter; `animation-vocabulary` names an effect precisely when you're speccing it to a build subagent or the user.
+
+The origin sessions used only `emil-design-eng` — but they also had **no motion gate**, which is a gap, not a precedent. Two of the pack's skills close it: any motion this round built is gated at Phase 8 by **`review-animations`** (the strict block/approve review — the motion equivalent of `web-design-guidelines`), and a whole-module motion-debt audit, when warranted, is **`improve-animations`** (read-only, produces prioritized plans another agent executes). `review-animations` is `disable-model-invocation: true` — it will never fire unless the pipeline names it, which is exactly why Phase 8 names it.
 
 ## Phase 7 — Live verify + instrument
 
@@ -100,9 +104,10 @@ Two observed disciplines that live here:
 
 ## Phase 8 — Final gate (parallel, acceptance rounds only)
 
-Interim rounds end at Phase 7. The full gate runs when a round is believed to be the acceptance round — it's expensive by design. Three dimensions graded **separately, never folded**:
+Interim rounds end at Phase 7. The full gate runs when a round is believed to be the acceptance round — it's expensive by design. Dimensions graded **separately, never folded**:
 - **Design-craft:** two parallel `general-purpose` subagents, each given the live URL/screenshots and impeccable's critique flow, no shared context.
 - **Guidelines-compliance:** `web-design-guidelines` against the FINAL code — mandatory for web (in the original 66+ sessions this ran only twice, as an optional sidekick; that was a wiring failure, not a judgment). Flutter swaps in `apple-design`'s gesture/motion/reduced-motion sections + Material guidance.
+- **Motion-craft** (whenever the round added or changed animation): `review-animations` — the strict block/approve gate against 10 non-negotiable motion standards. The origin sessions had no such gate; it's `disable-model-invocation`, so it only runs because the pipeline names it here. Skip it only on a round that touched no motion.
 - **Code-quality:** `code-review --high` (8 angles; the removed-behavior angle checks against the Phase-3 feature-parity matrix) + a fresh, context-free `agent-skills:code-reviewer` pre-merge pass, deliberately unanchored on the others' assumptions.
 
 ## Phase 9 — Ship (`superpowers:finishing-a-development-branch`)
@@ -136,4 +141,4 @@ What the sessions actually did (the naive "backend first, then FE" is NOT it):
 
 ## What "done" looks like
 
-A module where: the audit baseline was scored and beaten (not just "looks good"), the design was locked as a user-approved artifact before code, the build was reviewed task-by-task against §IA SIGNED OFF, the motion pass happened, every claim of "working" has a real screenshot and a real trace behind it, mocks were reverted before every commit, shared-component siblings were spot-checked, the final gate passed on all three dimensions independently (design-craft, guidelines-compliance, code-quality), and a named human approved the merge. Anything short of that is a round, not a ship.
+A module where: the audit baseline was scored and beaten (not just "looks good"), the design was locked as a user-approved artifact before code, the build was reviewed task-by-task against §IA SIGNED OFF, the motion pass happened, every claim of "working" has a real screenshot and a real trace behind it, mocks were reverted before every commit, shared-component siblings were spot-checked, the final gate passed on each dimension independently (design-craft, guidelines-compliance, motion-craft where motion changed, code-quality), and a named human approved the merge. Anything short of that is a round, not a ship.
