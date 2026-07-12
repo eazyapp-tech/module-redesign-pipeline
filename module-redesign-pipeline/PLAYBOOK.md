@@ -65,14 +65,19 @@ Reuse existing components and services (Rooms, Dues, Collections, Expenses, shar
 
 Micro-interaction pass — autosave indicators, popovers, tactile swipe rows. `apple-design`, `animation-vocabulary`, `review-animations`, and `improve-animations` (the emilkowalski skill pack) sit adjacent to this phase as deeper motion tooling, but weren't part of any session this playbook is verified against — reach for them when a module's motion needs go beyond what `emil-design-eng` covers on its own (e.g. `review-animations` as a stricter gate, `improve-animations` for a retroactive whole-module motion audit).
 
-## Phase 7 — Live verify (`playwright` + raw browser tool calls)
+## Phase 7 — Live verify + instrument
 
 **This is the single highest-volume activity in every real session** — hundreds of browser calls in some sessions. Real login with test credentials, a real mobile viewport (390×844 is the recurring default), real screenshots, pixel-level checks (a divider that must only render between inactive tabs, never adjacent to the active pill). "Done" is not a status Claude gets to declare from reading its own diff — it gets declared after this step, and only after this step.
 
-## Phase 8 — Final gate, dual and parallel
+The step has two mandatory halves:
+- **Visual/behavioral** (what the original sessions did): playwright screenshots, flow walks, pixel checks. Flutter: golden tests + `integration_test`.
+- **Instrumented** (the wiring the original sessions lacked): Chrome DevTools MCP `performance_start_trace` on the primary flow — real LCP/INP/CLS graded against the ledger's Performance Budget — plus `npx react-scan@latest <url>` for wasted renders and an axe a11y scan. Flutter: DevTools performance overlay/timeline in `--profile` mode, no dropped frames past 16ms. A redesign that screenshots beautifully but was never traced has an unmeasured performance claim — which is no claim.
 
-Design-craft and code-quality are graded **separately, not folded into one pass**:
+## Phase 8 — Final gate, dual+1 and parallel
+
+Design-craft, guidelines-compliance, and code-quality are graded **separately, not folded into one pass**:
 - `impeccable` — 2 independent critique assessments run in parallel, not one
+- `web-design-guidelines` — mandatory for web surfaces, run against the FINAL code (the canonical Web Interface Guidelines: ARIA, focus states, touch targets, reduced motion, keyboard nav, heading hierarchy). In the original 66 sessions this ran only twice, as an optional sidekick — that was a wiring failure, not a judgment that it's optional. Flutter surfaces swap in `apple-design`'s gesture/motion/reduced-motion sections + Material guidance as the compliance lens.
 - `code-review --high` — 8 angles, also in parallel: line-by-line diff scan, removed-behavior audit, cross-file call-site tracer, reuse, simplification, efficiency, altitude, CLAUDE.md conventions
 - `agent-skills:code-reviewer` — a fresh, context-free pre-merge diff review, deliberately separate from the two above so it isn't anchored on the same assumptions
 

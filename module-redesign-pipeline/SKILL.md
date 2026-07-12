@@ -44,8 +44,8 @@ This skill **orchestrates other skills**, the same way `feature-design-pipeline`
 | 4 | **Plan** | `superpowers:writing-plans` | Turn the locked design into a task-by-task implementation plan |
 | 5 | **Build** | `interface-design`, executed via `superpowers:subagent-driven-development` | Strict per-task loop: Implement Task N → Review Task N (spec + quality) → Fix → Re-review, fanned to `general-purpose` subagents. Reuse existing components/services — never invent a parallel one for something the codebase already has |
 | 6 | **Motion** | `emil-design-eng` | Micro-interaction pass. `apple-design`, `animation-vocabulary`, `review-animations`, `improve-animations` are available as deeper motion references/audits but were not part of the sessions this pipeline is verified against — reach for them when the motion needs go beyond `emil-design-eng`'s coverage |
-| 7 | **Live verify** | `playwright` skill + raw browser tool calls | **The highest-volume step in every real session** — real login (test credentials), real mobile viewport, real screenshots, pixel-level checks (e.g. a divider that must only render between inactive tabs). Nothing is "done" without this |
-| 8 | **Final gate (dual, parallel)** | `impeccable` (2 independent critique assessments) + `code-review --high` (8 angles: line-by-line, removed-behavior, cross-file, reuse, simplification, efficiency, altitude, CLAUDE.md conventions) + `agent-skills:code-reviewer` fresh pre-merge pass | Design-craft and code-quality are graded **separately**, not folded into one pass |
+| 7 | **Live verify + instrument** | Web: `playwright` skill + raw browser calls + **Chrome DevTools MCP** (`performance_start_trace` → real LCP/INP/CLS vs the ledger's budget) + `npx react-scan@latest <url>` (wasted-render check) + an axe a11y scan via playwright. Flutter: golden tests (visual regression), `integration_test` flows, DevTools performance overlay/timeline in `--profile` mode, `flutter analyze` = 0 | **The highest-volume step in every real session** — real login, real viewport, real screenshots, pixel-level checks. Nothing is "done" without this. The instrumentation half is MANDATORY, not optional: a redesign that was never traced has an unmeasured performance claim, which is the same as no claim |
+| 8 | **Final gate (dual+1, parallel)** | `impeccable` (2 independent critique assessments) + **`web-design-guidelines`** (mandatory for web surfaces — the canonical 100+ Web Interface Guidelines rules: ARIA, focus, touch targets, reduced motion, keyboard nav) + `code-review --high` (8 angles: line-by-line, removed-behavior, cross-file, reuse, simplification, efficiency, altitude, CLAUDE.md conventions) + `agent-skills:code-reviewer` fresh pre-merge pass | Design-craft, guidelines-compliance, and code-quality are graded **separately**, not folded into one pass |
 | 9 | **Ship** | `finishing-a-development-branch` | Merge/PR/cleanup — route through the project's real merge owner (a named human gatekeeper), not just these automated gates |
 
 **The pipeline loops.** Phases 3–8 repeat as **rounds** driven by user feedback — real modules took 2–8 rounds (Reviews ran 8). A round opens with the user's verbatim feedback logged in the ledger, re-runs the audit if the rejection was craft-level, and closes with live verification. Ship (Phase 9) only happens after a round ends with acceptance, not after the first pass.
@@ -62,6 +62,14 @@ These are the user's own recurring standing directives, verified verbatim across
 - **Self-certify before proceeding.** "We may proceed, only if you're satisfied with your plan & approach — 100% sure." Don't move from plan to build on a hedge.
 - **Quote rejections verbatim, carry them forward.** A real rejection ("the runner ui is not top 1% at all") gets preserved as a citable record in the ledger, not paraphrased into something softer — precision here is what prevents relitigating the same critique.
 
+## Platform profiles — same pipeline, different tools per phase
+
+The pipeline's phases are platform-agnostic; the tools in Build/Verify/Gate swap by target. Pick the profile before Phase 4, record it in the ledger:
+
+- **Existing web (rentok-manager-web):** Chakra 2.5 + framer-motion is the frozen constraint — build within it, don't migrate mid-redesign. Verify: playwright + Chrome DevTools MCP + react-scan + axe. Gate adds `web-design-guidelines`.
+- **Flutter (RentOk Manager App):** Build: the app's existing widget/theme system — same reuse-don't-parallel-invent rule. Verify: golden tests for visual regression, `integration_test` for flows, DevTools performance overlay + timeline in `--profile` mode (jank = dropped frames past 16ms), `flutter analyze` = 0 replaces `tsc --noEmit` = 0 in the house rules. Gate: `impeccable` and `code-review` apply unchanged; `web-design-guidelines` does not — use `apple-design` (gestures/motion/reduced-motion sections) + Material guidance as the compliance lens.
+- **Greenfield (no legacy constraints):** default the stack to **shadcn/ui + Tailwind + Radix** and wire the registry MCPs (shadcn MCP, optionally 21st.dev Magic) from day one — this is the ecosystem the AI tooling world has standardized on, and with no Chakra constraint there's no reason to forgo it. `frontend-design` (Anthropic) sets aesthetic direction before `interface-design` builds. Everything else in the pipeline applies unchanged.
+
 ## Red flags — STOP, you're about to break the pipeline
 
 | Thought | Reality |
@@ -73,11 +81,13 @@ These are the user's own recurring standing directives, verified verbatim across
 | "I'll paraphrase the user's feedback in the ledger" | Quote it verbatim. Paraphrase is how the same critique gets relitigated next round. |
 | "The design is good, I'll start building and confirm later" | Lock with the user BEFORE code. No exceptions — the user is design-exacting. |
 | "This new surface needs outside inspiration, let me browse" | Check internal precedent first. Mobbin only when there genuinely is none. |
-| "tsc has a couple of pre-existing errors, close enough" | `tsc --noEmit` = 0 is the bar for "counts as done." |
+| "tsc has a couple of pre-existing errors, close enough" | `tsc --noEmit` = 0 (web) / `flutter analyze` = 0 (Flutter) is the bar for "counts as done." |
+| "The screenshots look great, skip the perf trace" | Instrumentation is part of Phase 7, not garnish. Untraced = unmeasured = unverified. |
+| "Guidelines audit ran early, no need at the gate" | `web-design-guidelines` runs at Phase 8 against the FINAL code — early audits don't cover what was built after them. |
 
 ## Known gaps (real, not yet covered — add explicitly if the module needs them)
 
-1. **Performance is judged, not measured.** `impeccable`'s `optimize.md` step is a qualitative/code-level assessment. No session in the verified set ever ran an actual measurement tool (Lighthouse, bundle-analyzer, web-vitals). If the module has a real performance concern, add an instrumented pass — don't assume the audit step covers it.
+1. **Field performance data.** Phase 7's Chrome DevTools trace gives *lab* numbers (closed the old judged-not-measured gap). What's still missing is *field* data — real-user Web Vitals from production (CleverTap/RUM). Lab numbers prove the redesign is fast on your machine; field numbers prove it's fast for a manager on a cheap phone in a low-signal area. Add a ledger "Success Metrics" baseline+checkpoint when the module ships.
 2. **Guided tours / coachmark UI patterns aren't covered.** `impeccable`'s `onboard.md` covers onboarding *flow strategy* (time-to-first-value), not the specific spotlight/coachmark tour widget. If the module needs a literal product tour, design it explicitly — there's no existing reference for it.
 
 ## Persistence

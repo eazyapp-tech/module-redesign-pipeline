@@ -9,13 +9,26 @@ Copy this structure for a new module redesign. Read the whole file (not just the
 What "top 1%" means for this module, stated once, referenced every round.
 e.g. "Benchmark: HomeV2 homescreen quality + Airbnb-level polish. Goal: top 1% world-class design."
 
+## Platform Profile
+Which profile from SKILL.md this module runs (existing web / Flutter / greenfield),
+and the stack constraint that follows from it (e.g. "Chakra 2.5, frozen" or
+"greenfield — shadcn/Tailwind/Radix + registry MCPs").
+
 ## House Rules (non-negotiable, carry into every session)
 - Color/token usage: e.g. usePlanColors, no hardcoded hex
 - API contract: frozen unless a prereq is explicitly scoped (see Backend Prereqs below)
-- `tsc --noEmit` must be 0 before anything counts as done
+- `tsc --noEmit` = 0 (web) / `flutter analyze` = 0 (Flutter) before anything counts as done
+- Responsive: components adapt to their CONTAINER, not just the viewport — container
+  queries + clamp() fluid type for anything reused across surfaces; verify at the
+  breakpoint matrix (mobile 390 / mid 800 / desktop 1280 or the module's real set)
 - Commit discipline: ask before committing, but checkpoint-ask along the way
 - No-delete without explicit confirmation
 - Merge gate: who actually merges (name the person)
+
+## Performance Budget (Phase 7 gate — lab numbers via Chrome DevTools MCP trace)
+Defaults unless the module overrides: LCP < 2.5s · INP < 200ms · CLS < 0.1 ·
+no wasted-render hotspots flagged by react-scan on the primary flow.
+Flutter: no dropped frames past 16ms on the primary flow in --profile mode.
 
 ## Parallel-Work Boundaries
 No-touch zones while this module's worktree is active alongside others, e.g.:
