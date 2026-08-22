@@ -58,6 +58,8 @@ Only when the module has **no internal precedent** — a new onboarding flow, an
 
 Pull the pinned house design language before designing anything new. These files are the documented output of `impeccable`'s own `teach.md` sub-flow. **If the repo has neither, run the teach flow once** to generate them, commit alongside the registry, and note it in the ledger.
 
+**Floor, not lid** (skill: Living house language): Home V2 / Tasks / latest modules are materials to start from, not a screen to paste. Raise a reusable pattern; don’t replica. Top 1% is the bar — existing anything is never limiting.
+
 ## Phase 3 — Audit, no code (`impeccable`, sometimes + `web-design-guidelines`)
 
 The audit needs the app **live** — stand up the dev server and get test credentials from the user now, recording both in the ledger's §Verify Recipe (they'll be needed every Phase 7 anyway). There's no separate brief/pre-mortem stage the way `feature-design-pipeline` has: the module exists, and the audit IS the grounding. Scored against Nielsen's 10 heuristics at 0–4 each (`impeccable/reference/heuristics-scoring.md`); **the score is the baseline the redesign must beat**, re-scored at the acceptance round (a real observed acceptance: 36/40). Re-run the audit any time a build gets rejected at craft level — the Tasks Runner was re-audited mid-project after *"the runner ui is not top 1% at all... a real rejection, not a nitpick."*

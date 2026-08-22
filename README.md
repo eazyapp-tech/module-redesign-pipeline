@@ -17,7 +17,21 @@ Five ideas do the heavy lifting:
 4. **Wired gates, not shelf inventory** — an audit of the source sessions found most installed design tooling was never invoked. This skill makes the gates *mandatory in the phases*, not optional add-ons: untraced = unmeasured = unverified.
 5. **Grounding accumulates in a component registry, not in session context** — the origin sessions re-ran the same "map the canonical components" agents every session and discarded the answers. The pipeline maintains a per-repo `COMPONENT-REGISTRY.md` (canonical components with when-NOT-to-use notes, a do-NOT-copy legacy list, house conventions, dated code gotchas): registry-check before any new component at build, registry pay-back at every round close. Reuse with judgment, indexed — never blind copying.
 
-## The gates (what "done" actually requires)
+## The Designer's Gates (enforced, not just documented)
+
+Three checks tied to a moment in the work — not a rule pile someone has to remember. `references/gates.md` names them; two hooks in `~/.claude/settings.json` fire them whether or not anyone remembered, at the exact moment they matter. **Set up once per machine: `references/hooks-setup.md`.**
+
+| Gate | Fires when | Passes when |
+|---|---|---|
+| **1 · Surface Ready** | a new component file is created | seven answers exist and the stakeholder has seen them: what it IS, the question she came with, the internal precedent, two outside references (Mobbin), two rendered directions, the pick and why, what the spec gets wrong |
+| **2 · Done Probe** | `git commit` with a UI component staged | `scripts/run_probe.py` passes at 375 and an explicit 1440 (one centre per control row, sticky x unchanged after a pan, popovers portaled with a gutter, no 0px icons, flex peers within 2px, no sideways scroll, first-row y on the phone judged, nothing opened by a programmatic focus) and its output is in the commit message |
+| **3 · Shared Primitive** | editing tokens, primitives, a shared header, theme | consumers grepped first, one concern per function, the probe re-run on a consumer after |
+
+`references/gates.md` also holds the working contract with the stakeholder (lead with a pick, expand feedback before acting on it, their suggestion is an input not an order, say which of the seven is missing rather than claim 100%), the taste bar, and the code bar — this is where "the agent is the designer" becomes checkable rather than aspirational. Mined from a session with eleven corrections of one shape: a rule that existed as prose and still got broken, because the gap was never knowing the rule, it was the moment it should have fired.
+
+**Model note.** Runs on Sonnet most of the time in practice, sometimes Opus, occasionally a stronger model dispatched for one framing decision. Nothing in the gates depends on the model remembering — the hook injects the check, the probe prints numbers, every pass condition has a threshold.
+
+## The gates (what "done" actually requires, phase by phase)
 
 | Phase | Gate | Tools |
 |---|---|---|
@@ -48,6 +62,8 @@ Restart Claude Code (or start a new session). It routes on asks like "redesign t
 cp -R module-redesign-pipeline <your-project>/.claude/skills/
 ```
 
+**Then wire the gates (once per machine, either install path)** — see `references/hooks-setup.md`. Without this, `SKILL.md` and `references/gates.md` are read as documentation, not enforced as gates.
+
 **Recommended companions** (Phase 7 instrumentation expects these):
 ```bash
 # Chrome DevTools MCP — real LCP/INP/CLS traces (Google official)
@@ -64,6 +80,11 @@ Mobbin MCP (reference screens) and the skills it orchestrates (`impeccable`, `in
 | `module-redesign-pipeline/PLAYBOOK.md` | Human-readable playbook — the pipeline linearly with the evidence per phase, and the round loop. Read/share this. |
 | `module-redesign-pipeline/references/redesign-ledger-template.md` | The `project_<module>-redesign.md` structure to copy for a new module — the observed section vocabulary (§IA SIGNED OFF, §BACKEND SCOPE, Surface Status, Shared-Surface Playbook, Verify Recipe...), the emoji/prepend-to-top living conventions, and the resume-prompt shape. |
 | `module-redesign-pipeline/references/component-registry-template.md` | The per-repo `docs/design/COMPONENT-REGISTRY.md` structure — canonical components (use / when-NOT-to-use / gotchas), layout recipes, tokens & hooks, house conventions, do-NOT-copy legacy list, extraction candidates, dated learnings. Lives in the target repo, versioned with the code. |
+| `module-redesign-pipeline/references/gates.md` | **The Designer's Gates.** Surface Ready / Done Probe / Shared Primitive, the working contract with the stakeholder, the taste bar, the code bar, environment traps. Read this before `SKILL.md` if you only read one file. |
+| `module-redesign-pipeline/references/hooks-setup.md` | The exact `settings.json` hook block that makes the gates fire, plus a verify snippet. Do this once per machine — a skill folder cannot wire hooks on its own. |
+| `module-redesign-pipeline/references/expansion-rule-worked-example.md` | A real audit round that failed the expansion rule, worked through step by step, plus the state-combination measurement rule (measure alignment with every toggle ON, not the default state). |
+| `module-redesign-pipeline/scripts/ui-probe.js` + `scripts/run_probe.py` | The Done Probe. A browser-side script that measures a live page (centre lines, sticky drift, popover portaling/gutter, icon widths, flex-peer widths, tap targets, focus leaks) and a Python/Playwright runner that drives it at any set of widths from one command. |
+| `module-redesign-pipeline/learnings.md` | Dated corrections, newest first, each with the rule it produced — read at the start of every round, append whenever one lands. |
 
 ## Relationship to feature-design-pipeline
 
