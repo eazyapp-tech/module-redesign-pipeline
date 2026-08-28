@@ -13,7 +13,7 @@ description: >-
 
 Turn "this module looks generic / dated / not top 1%" into a shipped, live-verified redesign — grounded in the module's real code, benchmarked against real reference products where no internal precedent exists, gated by a scored audit and real performance traces, and never accepted on a claim alone. This is the recipe mined from 66+ real sessions across the Reviews, Food/FoodV2, Tasks, and Change Room redesigns — every phase below is what was actually invoked, not a theoretical pipeline.
 
-**Read `learnings.md` in this folder before starting any round. Append to it whenever a correction lands.** It carries the corrections that produced the rules below, plus verified repo truths worth not re-deriving.
+**Read `learnings.md` in this folder before starting any round. Append to it whenever a correction lands.** Lookup files, keyed by question not date: `references/gates.md` (rules), `references/patterns.md` (cross-repo patterns), `references/traps.md` (tooling), and in the target repo `docs/design/COMPONENT-REGISTRY.md` + `docs/design/PATTERNS.md`. **Gate 4 (Harvest) fires on every `git commit`:** four questions, three tests, `scripts/registry_rot.py`. See `references/harvest.md`. It carries the corrections that produced the rules below, plus verified repo truths worth not re-deriving.
 
 This skill **orchestrates other skills** — it doesn't replace `impeccable`, `interface-design`, or `emil-design-eng`, it invokes them in the right order with the right gates in between. (Skill names from the superpowers suite are written with the `superpowers:` prefix; depending on install they may resolve unprefixed — same skills.)
 

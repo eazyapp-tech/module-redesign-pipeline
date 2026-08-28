@@ -1,3 +1,5 @@
+> **2026-08-23:** repo facts ("Repo truths", "Patterns worth stealing") moved to the repo at `docs/design/PATTERNS.md`; tooling traps to `references/traps.md`; cross-repo patterns to `references/patterns.md`. This file keeps the *stories* behind rules. Harvest at every commit: `references/harvest.md`.
+
 # module-redesign-pipeline — learnings
 
 ## 2026-08-23 (late) — Complaint Bot Setup, Try a ticket rejected at the design level
@@ -262,3 +264,34 @@ The module had 22 distinct type values including 13.5 / 12.5 / 11.5 / 19 / 10px.
 
 ### "Top 1%" is a standing bar, not a per-pass reminder
 He said it mid-turn as a reminder, not a new instruction. The test from the previous round stands: does the screen anticipate her question (coverage count, dock sentence) or wait for it.
+
+## 2026-08-27 — Analytics, the systems pass
+
+### A token with no consumers is not a system, it is a claim
+A round produced a full design system for a module: a type role-table read out of the
+platform twin, a bar-gradient family table, a pure numeric engine (floors, floor-and-borrow,
+nice-number axis, label fit, absence handling), motion and state tokens. It was wired into the
+shell — page, card, header, one block — and the commit message said "one tokens file · fixes 15
+findings". The stakeholder came back with: solid bars instead of gradients, wrong font weights,
+missing currency marks, missing icons. Measuring the actual consumption settled it: across the
+18 files that DRAW data, the gradient table had **0** consumers, the type table **1**, and the
+numeric engine **0**. Nine files were still painting a flat payload hex directly.
+
+The findings were fixed in the file and not on the screen, and every symptom he reported was one
+unwired token.
+
+**Rule produced: creating a token layer and CONSUMING it are two separate jobs, and only the
+second one is visible. Never report a token layer as landed without a per-token consumer count,
+and put that count in the commit message.** The same shape as the registry rule already here — an
+unregistered reusable is invisible — one level further down: an unconsumed token is worse than
+invisible, because the codebase now asserts a system it does not actually run.
+
+Cheap check, worth running at the end of any tokens pass:
+`for t in TOKEN_A TOKEN_B; do echo "$t → $(grep -rl "$t" <component dirs> | wc -l)"; done`
+
+### Fixing what was pointed at, one level down
+The same round was explicitly asked to stop doing whack-a-mole, ran a 41-finding systematic
+sweep, and STILL shipped the stat tiles fixed and the money-lines directly beneath them in the
+same card untouched. The expansion rule is not satisfied by sweeping for the pattern; it is
+satisfied by sweeping for the pattern AND then re-reading the file you just edited for the
+sibling sitting three lines below the thing you changed.

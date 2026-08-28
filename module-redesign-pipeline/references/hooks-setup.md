@@ -54,3 +54,17 @@ You should see `Gate 1 would fire` for a path that doesn't exist yet on disk, an
 ## Why this isn't baked into the skill install
 
 Claude Code skills are read-only reference material the agent loads into context; they cannot register hooks on their own, and a skill silently rewriting `settings.json` on first use would be a surprising, hard-to-audit side effect. So installing the skill gives you the *rules* immediately; wiring the hooks (this file) is what turns them into a *standard* nobody can skip by not reading — do both.
+
+
+## Gate 4: Harvest (third PreToolUse entry, matcher `Bash`)
+
+Fires on any command containing `git commit`. Injects the four harvest questions, the three tests, and the rot command. Add as a third object in `hooks.PreToolUse`:
+
+```json
+{
+  "matcher": "Bash",
+  "hooks": [{ "type": "command", "command": "jq -r '.tool_input.command // empty' | { read -r c; case \"$c\" in *'git commit'*) printf '%s' '{\"hookSpecificOutput\": {\"hookEventName\": \"PreToolUse\", \"additionalContext\": \"Gate 4, Harvest. ... (copy from ~/.claude/settings.json on the machine that has it, or from references/harvest.md)\"}, \"suppressOutput\": true}' ;; esac; }" }]
+}
+```
+
+Test: `echo '{"tool_input":{"command":"git commit -m x"}}' | bash -c "<command>"` prints the context; `git status` prints nothing.

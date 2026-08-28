@@ -4,7 +4,7 @@
 
 **Why gates and not rules.** Every rule below already existed somewhere as prose before the session that produced this file, and it still got broken. Knowing a rule was never the gap. The gap was the moment it gets applied. So these are checks tied to a moment in the work, and global hooks fire them at that moment whether or not anyone remembered. A rule you have to recall is advice. A gate you have to pass is a standard.
 
-Three gates, one contract, one probe. Everything else is in the skill.
+Four gates, one contract, one probe. Everything else is in the skill.
 
 **Enforcement is not automatic on install.** These gates fire because two hooks are wired into `~/.claude/settings.json` — a per-machine file a skill cannot write on its own. Set them up once with `references/hooks-setup.md`, or this file is rules again, not gates.
 
@@ -58,6 +58,30 @@ Run `scripts/ui-probe.js` (see below) and paste its output into the commit messa
 **A real device beats the pane.** The bug above survived a verification pass in the preview pane and was found on a phone. For anything with sticky, focus, or touch in it, the Playwright persistent profile (a real window) is the floor, and a screenshot from an actual phone is the bar.
 
 **The pass condition** is not "the numbers exist". It is: every control in a row shares one centre, every sticky x is unchanged after the pan, every popover is portaled with a gutter of 8px or more, no icon is 0px, flex peers differ by 2px or less, no overflow, and the first row's y on the phone is stated and judged.
+
+### The behaviour half (the probe cannot see this)
+
+A screen whose primary action silently destroyed data passed this gate on
+geometry: centres aligned, sticky held, no overflow. The numbers were all true
+and the screen was broken. **Before "verified", drive the surface, do not only
+measure it.** Every control the user can press, pressed, and the state checked
+after:
+
+- Does a picker that holds many things actually hold many? Open it, add two,
+  confirm both are there and the first was not replaced.
+- Does every button have a handler that changes state? A control whose `onClick`
+  only fires a toast is a lie.
+- Does every count on screen match what the screen is showing? Derive counts from
+  the rendered rows; a number read from a response while the rows come from
+  somewhere else will disagree eventually.
+- Does the empty / error / end state offer the next action?
+
+**Two probe traps that make this pass for the wrong reason.** `[role=dialog]`
+matches every mounted-but-hidden popover, and the first match is usually empty —
+filter to the one that contains the controls. And a row's `innerText` starts with
+its avatar initial, so `startsWith(name)` matches nothing and the assertion
+passes having clicked nothing. Always assert the state *changed*, never just that
+the call did not throw.
 
 **The hook.** A `git commit` whose staged diff touches a UI component fires this gate.
 
@@ -147,13 +171,14 @@ Mined from what the stakeholder repeated, in their words where it helps.
 
 ---
 
-## Environment traps (this machine, carried across projects)
+## Gate 4: Harvest (at every commit, and at handoff)
 
-- `grep` is aliased in this shell and prints a summary instead of matches. Use `/usr/bin/grep`.
-- `echo =====` breaks zsh (glob). Use `echo ---`.
-- A multi-line commit message with nested quotes breaks `git commit -m`. Write it to a file and use `-F`.
-- The Claude Browser preview pane's "desktop" preset is **800px**, below `lg`. Set 1440 explicitly with `resize_window`.
-- The preview pane has `document.hasFocus() === false`. Anything gated on a real focus or blur event, or `:focus-visible`, needs the Playwright persistent profile.
-- Scripted browser checks leave state behind (stacked drawers, open popovers, select mode surviving a resize). Reload between checks, and assert "zero open on a fresh load" before reading any count.
-- A `location.reload()` inside the same `javascript_tool` call as the check fails with "target navigated". Reload in one call, check in the next.
-- A check that only fires one scroll event can sit inside a 350ms collapse lock and read as "broken". Wait past the lock before the return scroll.
+Four questions, three tests, one script. Did this stretch produce a rule, a reusable, a pattern, a trap? Each is one line in the right file or "none". Saved only if a fresh session would spend more than five minutes re-deriving it, it is stable, and it is not already recorded. Then `scripts/registry_rot.py` on the repo. Full text: `references/harvest.md`.
+
+**The hook.** Any `git commit` fires it.
+
+---
+
+## Environment traps
+
+Moved to `references/traps.md`, keyed by what you were trying to do. Append there.

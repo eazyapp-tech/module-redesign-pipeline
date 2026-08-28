@@ -129,19 +129,46 @@ function uiProbe(opts) {
   report.overflowX = document.documentElement.scrollWidth > document.documentElement.clientWidth
   if (report.overflowX) flag('overflow', 'page scrolls sideways (' + document.documentElement.scrollWidth + ' > ' + document.documentElement.clientWidth + ')')
 
-  // 7. Tap targets on a phone.
+  // 7. Tap targets on a phone. MEASURED, never trusted.
+  //
+  // Reconciled 2026-08-23 after two probes disagreed (2 vs 55) on one surface:
+  //   - trusting a declared ::after passed 45 controls whose extension was dead
+  //     (an ::after with no stacking position sits under the next sibling; an
+  //     overflow:auto on EITHER axis clips it; a hairline paints over it)
+  //   - measuring with elementFromPoint at a point OUTSIDE the viewport returns
+  //     null, so every control right of the phone fold read as its own height
+  // So: walk elementFromPoint up and down from the centre, clamp x into the
+  // viewport, skip what is off-screen (a thumb cannot tap it) or covered at its
+  // centre by a sticky layer (that is a scroll position, not a small target),
+  // and credit a control inside a >=44px control (a pill inside a 44px cell).
   if (vw < 768) {
-    var small = []
-    document.querySelectorAll('button, a[href], input, [role="button"], [role="checkbox"]').forEach(function (el) {
+    var INTER = 'button, a[href], input, select, [role="button"], [role="checkbox"]'
+    var reach = function (el) {
+      var q = r(el)
+      var cx = Math.min(vw - 1, Math.max(1, q.left + q.width / 2)), cy = q.top + q.height / 2
+      var up = 0, down = 0, d, h
+      for (d = 1; d <= 30; d++) { h = document.elementFromPoint(cx, cy - d); if (h && el.contains(h)) up = d; else break }
+      for (d = 1; d <= 30; d++) { h = document.elementFromPoint(cx, cy + d); if (h && el.contains(h)) down = d; else break }
+      return Math.max(q.height, up + down)
+    }
+    var small = [], offScreen = 0, covered = 0
+    document.querySelectorAll(INTER).forEach(function (el) {
       if (!visible(el)) return
       var q = r(el)
-      // honour a pseudo-element hit extension: check the computed ::after inset
-      var after = getComputedStyle(el, '::after')
-      var extended = after && after.content !== 'none' && after.position === 'absolute'
-      if (!extended && (q.width < 44 || q.height < 44)) small.push(label(el) + ' ' + round(q.width) + 'x' + round(q.height))
+      if (q.left < 0 || q.right > vw || q.top < 0 || q.bottom > vh) { offScreen++; return }
+      var centre = document.elementFromPoint(Math.min(vw - 1, Math.max(1, q.left + q.width / 2)), q.top + q.height / 2)
+      if (centre && !el.contains(centre)) { covered++; return }
+      var h = reach(el)
+      // the ruler loses a pixel at each edge; 42 on the ruler is 44 declared
+      if (h >= 42) return
+      var parent = el.parentElement && el.parentElement.closest(INTER)
+      if (parent && reach(parent) >= 42) return
+      small.push(label(el) + ' ' + round(h))
     })
     report.smallTapTargets = small.length
-    if (small.length) flag('tap', small.length + ' tap targets under 44px on a phone, e.g. ' + small.slice(0, 5).join('; '))
+    report.tapTargetsOffScreen = offScreen
+    report.tapTargetsCovered = covered
+    if (small.length) flag('tap', small.length + ' tap targets under 44px on a phone (measured reach, on-screen only; ' + offScreen + ' off-screen not measured), e.g. ' + small.slice(0, 5).join('; '))
   }
 
   // 8. Programmatic focus must not open a card.
