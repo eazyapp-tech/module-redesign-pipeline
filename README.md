@@ -17,6 +17,15 @@ Five ideas do the heavy lifting:
 4. **Wired gates, not shelf inventory** — an audit of the source sessions found most installed design tooling was never invoked. This skill makes the gates *mandatory in the phases*, not optional add-ons: untraced = unmeasured = unverified.
 5. **Grounding accumulates in a component registry, not in session context** — the origin sessions re-ran the same "map the canonical components" agents every session and discarded the answers. The pipeline maintains a per-repo `COMPONENT-REGISTRY.md` (canonical components with when-NOT-to-use notes, a do-NOT-copy legacy list, house conventions, dated code gotchas): registry-check before any new component at build, registry pay-back at every round close. Reuse with judgment, indexed — never blind copying.
 
+## What is deliberately not in this repo
+
+Two files the skill reads are private to whoever runs it, and `.gitignore` keeps them out:
+
+- **the working record** for a project: how rounds actually succeed with one particular stakeholder, built by reading that person's own turns across a whole project
+- **the lesson log**: the corrections that stakeholder has already given
+
+Both are made of a named person's own words, including their register when a round went badly, and their business numbers. The line this repo holds is simple: **the generalisable method is public; anything derived from one stakeholder's own words is private.** They live under `~/.claude/docs/working-records/`. The skill points there and works without them.
+
 ## The Designer's Gates (enforced, not just documented)
 
 Three checks tied to a moment in the work — not a rule pile someone has to remember. `references/gates.md` names them; two hooks in `~/.claude/settings.json` fire them whether or not anyone remembered, at the exact moment they matter. **Set up once per machine: `references/hooks-setup.md`.**

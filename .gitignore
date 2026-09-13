@@ -1,0 +1,10 @@
+# Operator-private, never published. Both are built from a specific named
+# stakeholder's own words on real projects, so they carry that person's
+# corrections, register and business numbers.
+#
+# The line this repo holds: the generalisable method is public; anything
+# derived from one stakeholder's own words is private. Both files live under
+# ~/.claude/docs/working-records/ and are backed up in a private repo.
+module-redesign-pipeline/references/round-protocol.md
+module-redesign-pipeline/lessons.md
+working-records/

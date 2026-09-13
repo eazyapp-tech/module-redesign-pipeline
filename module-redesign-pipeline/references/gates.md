@@ -4,7 +4,11 @@
 
 **Why gates and not rules.** Every rule below already existed somewhere as prose before the session that produced this file, and it still got broken. Knowing a rule was never the gap. The gap was the moment it gets applied. So these are checks tied to a moment in the work, and global hooks fire them at that moment whether or not anyone remembered. A rule you have to recall is advice. A gate you have to pass is a standard.
 
-Four gates, one contract, one probe. Everything else is in the skill.
+Five gates, one contract, one probe. Everything else is in the skill.
+
+**The runnable form.** Copy `~/agent-config/templates/gates-module-redesign.md` into the work
+as `GATES.md`. Gate 2 and Gate 4 carry a command and decide themselves; the rest stay manual
+because no command can decide them. This file is the why, that ledger is the check.
 
 **Enforcement is not automatic on install.** These gates fire because two hooks are wired into `~/.claude/settings.json` — a per-machine file a skill cannot write on its own. Set them up once with `references/hooks-setup.md`, or this file is rules again, not gates.
 
@@ -52,6 +56,8 @@ Run `scripts/ui-probe.js` (see below) and paste its output into the commit messa
 | **Icon widths inside buttons** | Every icon in a tray rendered at 0px. `minW: 0` lets a flex child shrink to nothing and the SVGs go first. |
 | **Flex siblings that resolved to different widths** | `flex: 1` on every action inside a content-width container does nothing. Three peers came out 57, 37 and 65px. |
 | **Horizontal page overflow** | The page body must never scroll sideways. |
+| **Every element's opacity with scripts blocked** | A scroll reveal that sets `opacity: 0` by default makes the whole page blank the moment JS does not run, and it silently does not run in a static preview. The animation opts IN (`.js .rv{opacity:0}`, script adds `.js`), never out. Fired on three published pages at once. |
+| **Inline layout styles against the mobile media query** | An inline `style="grid-column:3"` beats the `@media (max-width:900px)` rule that collapses the grid, so ten margin notes would have created a phantom third column and scrolled a phone sideways. Position with a class the media query can reset; never inline. |
 | **Tap targets under 44px on the phone** | A 34px chip reads right; a thumb needs 44. |
 | **Open popovers after a programmatic focus** | A card that opens when code moves focus reads as the page acting on its own. |
 
@@ -105,9 +111,30 @@ After the edit:
 
 ---
 
+## Gate 5: State Census (before any module is called done)
+
+Gate 1 fires when a surface is created. Gate 2 fires when you claim it works. **Neither fires for a state that already exists in the code and has never been rendered** — and that is exactly where five screens hid on the payment page: expired, not found, checking, failed, unsure. The expired one is what 68% of links arrive at, the most-visited screen in the whole product. It had been built as plumbing, shipped showing a 72px strip of an asset whose full version sat unused in the same file, and then defended in prose I wrote without ever looking at the render. The stakeholder found all five by asking one question: "did you redesign the expired page thoughtfully, or did you miss any?"
+
+**The census is mechanical, and that is the point.** "List the states you designed" returns the states you thought about, which is the same set that already got attention. The list has to come from the code, because the code is the only list that includes what you forgot.
+
+1. **Enumerate from the branches, not from memory.** Every early return, every `if (x) return <Y/>`, every status value, every error and empty and loading path, every server-side redirect or `notFound`. In a page router read `getServerSideProps` too: a branch that never reaches the component is still a screen a person sees.
+2. **Write the list down before rendering anything.** A state you can name and did not list is the one that ships unlooked-at.
+3. **Force each branch and look at it.** A URL, a flag, a stubbed response, whatever reaches it. Looking is the gate — reasoning about a screen you have not seen is how a confident wrong rationale gets written. If a state cannot be reached in the harness, mark the row unreachable rather than dropping it.
+4. **Judge each against the same bar as the happy path.** Does it say what is true right now, does it offer the next action in her words, does it use the assets this module already has. A terminal state with nothing to do is a dead end even when the reason it has nothing to do is a good one.
+
+**The pass condition:** one row per branch — the state, how it was forced, the screenshot — every row filled or explicitly marked unreachable. A module with an unrendered branch is not done, however good the happy path is.
+
+**Sizing comes before taste, not after.** The expired screen only became worth designing once someone counted the links that had ever been sent, and over 90% of them were already dead. Run the count for each state in the census before deciding which ones deserve the effort, or the rarest-looking screen keeps getting the least work while being the one most people see.
+
+**The hook.** No command can decide this one. It rides the handoff checklist and the pre-push list, beside Gate 2.
+
+---
+
 ## The Working Contract (how the lead works with the stakeholder)
 
-Mined from what the stakeholder repeated, in their words where it helps.
+Mined from what the stakeholder repeated, in their words where it helps. This section is a harvest target, not background: Gate 4 question 5 writes here.
+
+**Read the project's working record first, if one exists** (`~/.claude/docs/working-records/`, private to the operator and not in this repo). This section is the rule list. That record is the evidence: which sequence of moves produced agreement across a four-day project and which produced its worst turns, plus how to read which rung of his register you are on. Two moves caused every rejection in that project, and they are both about process rather than taste: approximating a source instead of opening it, and writing code instead of rendering a proposal.
 
 **Lead. Do not wait.** "You are the design lead. I am just guiding you." Come with a pick and a reason. A neutral list of options makes them do the job they asked you to do.
 
@@ -127,11 +154,43 @@ Mined from what the stakeholder repeated, in their words where it helps.
 
 **"Only if you're satisfied."** That phrase appears in his asks more than once. It is not permission to skip; it is the instruction to self-certify against the seven questions and the probe, and to say which one is not met if any is.
 
+**The hedged observation is the strongest signal in the session.** "I don't know why, but somehow it felt like there is some scroll problem. I don't know. Could be just my mistake. Could be that I did not see it, but still, there is some problem." Three times in one session he flagged something with an apology attached, and three times he was right: a 348px sideways scroll the audit called clean, five states nobody had rendered, a hero asset cropped to a strip. The hedge is not a suggestion to weigh against the code — it is a symptom report from the only person looking with fresh eyes. Suggestions get cross-checked; **symptoms get measured, and the first thing to suspect is the check that says there is nothing there.**
+
+**"Why is this here?" is a deletion question.** "Why do we need even chips here?" was not a request to justify the chips. Every element he asks that about is one that arrived by default, and for the chips the honest answer was that they should not exist. Answer with the reason the element earns its place, or delete it. Never compose a rationale for something you have not looked at — on this page that produced a confident paragraph about a screen that had never been rendered, false the moment it was written.
+
+**A ruling that inverts a default has to be swept, not just applied.** He reversed a production gate from off-unless-enabled to on-unless-disabled. The code changed; the PR description still described the old behaviour and came one sentence from reaching the reviewer that way. When a ruling inverts something, grep every place the old version is *described* — PR body, handoff, docs, comments, tests — not only the line that implements it. The sample-not-scope rule applies to his decisions as much as to his feedback.
+
+**"Blocked on the backend" is not permission to ship plumbing.** The expired screen had one honest capability and no route to the rest, so it shipped as plumbing. He supplied the design himself: send her to WhatsApp with a preset message that triggers the workflow, wait on the backend for the rest. Design the one action that is not blocked, name what is waiting, and never let a good reason justify a dead end.
+
+**The two-word turn is an expansion.** "& code" arrived as its own message after a design pass and meant the same standard now applies to the code. "& show me all the screenshots too" meant every state, not a sample. His short follow-ups widen scope; read them as "and everywhere else this applies", never as one more small item.
+
+**What "100%" actually fails on.** Four times in one session he handed the gate over: "push it if 100% satisfied", "gotta be 100% sure, this is payment related". None of those failed on design confidence. They failed on checks that could not fail — an overflow audit measured against a number that grows with the overflow, six scripts pointed at a port serving the previous worktree, a secret scan that errored and printed "clean" — and on a fix verified at its call site instead of its destination. Before answering his "100%?", confirm the check ran, could have failed, and measured the thing you are claiming. Traps in `traps.md`.
+
+**Systems thinking is for designing, not only for analysing.** He had to send "think in systems & workflows, 2nd & 3rd order effects" as a standalone turn, and then "think in systems always" two turns later, in a session where that is already a standing instruction. The pattern behind it: the systems lens was running during investigation and switched off during design, so a screen got built as a mechanism and only became a designed thing after he pushed. If the ask is to design something, the count, the workflow it sits in, and what happens next come first, on the first pass.
+
+**The render is the artifact of agreement, not the plan.** "I wanna visualize first before u make changes in the code." "Either show me screenshots or show me locally for eyeballing." "Can I eyeball it? Can you open it in the browser pane?" He asked for a rendered thing before code five separate times in four days. A described plan is not what he is approving and never has been — the go is on something he looked at.
+
+**His sharpest register means you answered a different question.** Every time that landed, the reply had been fluent and about something adjacent: he asked whether the module's *code* was better written than the live page's, and got an answer about whether it took money yet. His own instruction: "Are you getting what I'm trying to ask or not? If not, then ask a clarifying question." One clarifying question is always cheaper than a confident answer to the wrong question.
+
+**An item he raised once and has not seen is still open, and he counts.** He asked for a chevron to be removed on 12 September, and asked again on 13 September with "I had told you to remove the chevron." He returns to pointer lists from several turns back — "what are the tasks that remain from my original pointer earlier?" — so an unresolved item does not decay. Keep the open list and report it back unprompted, including the ones you decided against and why.
+
+**A rejected treatment is unassigned, not dead.** "I don't like the tumbler. Save this and remember that this tumbler design can be used for an electricity meter or something." He rejects a thing for one surface while filing it for another. Record those against the module he named, or the idea is lost and re-derived from scratch.
+
 **Never the same loop twice.** "We are getting into the same loop again and again for incremental fixes." A round that matches the feedback item for item is a loop. A round that comes back with the pattern, the count, and the fix for the unreported siblings is not.
 
 ---
 
 ## The Taste Bar (what "top 1%" means, checkably)
+
+**Current data is not the limitation, it is only the current reality.** His words, about team-member photos that 4% of records have: "Sooner or later users will have their own DP." Design the surface the full data deserves and make the degraded case beautiful in its own right — a considered initial, not a grey circle. Designing down to today's coverage bakes the gap in permanently and guarantees a redesign the moment the data lands. The inverse trap is equally his rule: **a case that affects one user still gets designed.** "All the practical real-life cases thought through properly, even if it is used for one particular user. No shoddy work." Sizing decides what you do *first*, never what you skip.
+
+**A metaphor has a boundary, and past it the metaphor stops meaning anything.** The payment page's paper-and-machine language was pushed onto every surface until he said: "You do not need to force-fit everything into the printer paper UI. It will lose its meaning. It has already lost its meaning." Then he had to say it a second time. A design system earns its meaning by being the answer to a particular question; applied to a screen that asks a different question it reads as a costume. Name what the metaphor stands for, and when a surface falls outside it, extend the system rather than stretch the skin.
+
+**Never make her confirm a decision she has already made.** She tapped Pay on one specific bill, and the next screen asked her which bills and how much. "That's a stupid workflow." If the tap carried the answer, carry it forward and land her on the next real decision. Every screen that only re-states what she just chose is a screen that exists because the flow was assembled from components instead of walked as a job.
+
+**Open the source he named, always, before writing anything.** He supplies Figma nodes with exact ids, live screenshots, mood boards, competitor references, real numbers. Roughly fifteen Figma links in four days, and the most repeated craft rejection of the project was reproducing the shape of one instead of extracting from it: "Why did you not use the exact Figma asset from Figma itself?" A rendered object in a design file is one tool call away and always beats a hand-drawn approximation. His word for the failure is **skimming**, and it is detectable from outside, which is why he catches it every time. When you cannot tell which node he means, ask. He offers material unprompted and never treats the request as a burden.
+
+**Put the code beside the mockup before calling it built.** An approved design can be lost in the port: "Why are you not designing with taste? The artifact looks better than what you have designed." The design was right and the implementation dropped it, which reads to him as a taste failure rather than a fidelity failure. A round that follows an approved render is done when the two are placed side by side and the difference is nil.
 
 **Group with space, never with lines.** Hairline dividers between actions turn a floating control into a spreadsheet toolbar.
 
@@ -173,11 +232,13 @@ Mined from what the stakeholder repeated, in their words where it helps.
 
 ## Gate 4: Harvest (at every commit, and at handoff)
 
-Four questions, three tests, one script. Did this stretch produce a rule, a reusable, a pattern, a trap? Each is one line in the right file or "none". Saved only if a fresh session would spend more than five minutes re-deriving it, it is stable, and it is not already recorded. Then `scripts/registry_rot.py` on the repo. Full text: `references/harvest.md`.
+Five questions, three tests, one script. Did this stretch produce a rule, a reusable, a pattern, a trap, **or a working note**? Each is one line in the right file or "none". The fifth is the one that gets skipped: the first four all ask what the code taught you, so none of them can notice that nothing was written down about how the work went with him. Saved only if a fresh session would spend more than five minutes re-deriving it, it is stable, it is not already recorded, and, when it prescribes a command, that command has been run here once and its output seen. Then `scripts/registry_rot.py` on the repo. Full text: `references/harvest.md`.
 
 **The hook.** Any `git commit` fires it.
 
 ---
+
+- **An open item says the answer "gets read off the Figma / the API / the logs". Is that a status?** No, it is an unfinished task with a source attached, and it will sit there for weeks because it reads like a decision that is merely pending. Go and read the source the moment you meet the sentence. On rentok-property-onboarding an item had said since 28 August that the onboarding checklist's step names, grouping and count "get read off the Figma, not invented"; nobody opened the file, and when someone finally did, all nine steps were there with names, descriptions, videos and buttons. Sweep every document for that construction before writing anything downstream of it, and when you close one, say what the source settled AND what it left open, since a drawing answers the "what" and almost never the "why".
 
 ## Environment traps
 

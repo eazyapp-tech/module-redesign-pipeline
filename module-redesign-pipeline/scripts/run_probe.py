@@ -45,8 +45,8 @@ def main() -> int:
     widths = [int(w) for w in a.widths.split(",")]
     from urllib.parse import urlsplit
 
-    origin = "{0.scheme}://{0.netloc}".format(urlsplit(a.url))
-    path = a.url[len(origin):] or "/"
+    urls = [u.strip() for u in a.url.split(",") if u.strip()]
+    origin = "{0.scheme}://{0.netloc}".format(urlsplit(urls[0]))
 
     out = {}
     failed = False
@@ -60,43 +60,55 @@ def main() -> int:
             page = ctx.new_page()
 
         # Warm the app once so client-side stores (plan colours, property) load.
-        page.goto(origin + "/", wait_until="networkidle")
+        page.goto(origin + "/", wait_until="load")
         page.wait_for_timeout(int(a.wait * 1000))
-
-        for w in widths:
-            h = 812 if w < 768 else 900
-            page.set_viewport_size({"width": w, "height": h})
-            # Soft navigation keeps Redux warm; fall back to a hard goto.
-            navigated = page.evaluate(
-                "(u) => { try { if (window.next && window.next.router) { window.next.router.push(u); return true } } catch (e) {} return false }",
-                path,
-            )
-            if not navigated or page.url.rstrip("/") != a.url.rstrip("/"):
-                page.goto(a.url, wait_until="networkidle")
+        # Session cookies do not survive a persistent-context restart, so a headed run
+        # waits (up to 10 min) for a person to log in before probing.
+        if a.headed:
+            for _ in range(300):
+                if page.locator("text=Login with").count() == 0:
+                    break
+                page.wait_for_timeout(2000)
             page.wait_for_timeout(int(a.wait * 1000))
-            opts = {"firstRow": a.first_row} if a.first_row else {}
-            report = page.evaluate("({src, opts}) => { (0, eval)(src); return uiProbe(opts) }", {"src": PROBE, "opts": opts})
-            out[w] = report
-            failed = failed or not report["pass"]
-            if not a.json:
-                print(f"\n== {report['summary']} ==")
-                print(f"first content row y: {report['firstRowY']}")
-                for row in report["controlRows"]:
-                    mark = "  <-- " if (row["centreSpread"] > 2 or row["heightSpread"] > 2) else "      "
-                    print(mark + " | ".join(f"{i['t'] or '(no label)'} {i['h']}px@{i['cy']}" for i in row["items"]))
-                for s in report["sticky"]:
-                    extra = f", h {s['h']}/{s['rowH']}" if "rowH" in s else ""
-                    print(f"sticky {s['t']}: x {s['before']} -> {s['after']}{extra}")
-                for pv in report["popovers"]:
-                    print(f"popover {pv['t']}: portaled={pv['portaled']} gutter={pv['gutter']}")
-                if report["findings"]:
-                    print("findings:")
-                    for f in report["findings"]:
-                        print(f"  [{f['kind']}] {f['detail']}")
+
+        for url in urls:
+          path = url[len(origin):] or "/"
+          for w in widths:
+              h = 812 if w < 768 else 900
+              page.set_viewport_size({"width": w, "height": h})
+              # Soft navigation keeps Redux warm; fall back to a hard goto.
+              navigated = page.evaluate(
+                  "(u) => { try { if (window.next && window.next.router) { window.next.router.push(u); return true } } catch (e) {} return false }",
+                  path,
+              )
+              if not navigated or page.url.rstrip("/") != url.rstrip("/"):
+                  page.goto(url, wait_until="load")
+              page.wait_for_timeout(int(a.wait * 1000))
+              opts = {"firstRow": a.first_row} if a.first_row else {}
+              report = page.evaluate("({src, opts}) => { (0, eval)(src); return uiProbe(opts) }", {"src": PROBE, "opts": opts})
+              out[w] = report
+              failed = failed or not report["pass"]
+              if not a.json:
+                  print(f"\n== {url} {report['summary']} ==")
+                  print(f"first content row y: {report['firstRowY']}")
+                  for row in report["controlRows"]:
+                      mark = "  <-- " if (row["centreSpread"] > 2 or row["heightSpread"] > 2) else "      "
+                      print(mark + " | ".join(f"{i['t'] or '(no label)'} {i['h']}px@{i['cy']}" for i in row["items"]))
+                  for s in report["sticky"]:
+                      extra = f", h {s['h']}/{s['rowH']}" if "rowH" in s else ""
+                      print(f"sticky {s['t']}: x {s['before']} -> {s['after']}{extra}")
+                  for pv in report["popovers"]:
+                      print(f"popover {pv['t']}: portaled={pv['portaled']} gutter={pv['gutter']}")
+                  if report["findings"]:
+                      print("findings:")
+                      for f in report["findings"]:
+                          print(f"  [{f['kind']}] {f['detail']}")
         ctx.close()
 
     if a.json:
         print(json.dumps(out, indent=2))
+    # success-only token, so a gate's EXPECT cannot match a failing run
+    print("DONE-PROBE: FAIL" if failed else "DONE-PROBE: PASS")
     return 1 if failed else 0
 
 

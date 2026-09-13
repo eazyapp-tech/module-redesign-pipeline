@@ -4,7 +4,7 @@
 
 **The hook.** Any `git commit` fires it. The handoff checklist fires it again.
 
-## The four questions (answer each with one line, or "none")
+## The five questions (answer each with one line, or "none")
 
 | # | Did this stretch produce… | It goes to |
 |---|---|---|
@@ -12,14 +12,19 @@
 | 2 | **a reusable**: a component, token, hook or helper with a path, and when NOT to use it | the repo's `docs/design/COMPONENT-REGISTRY.md` |
 | 3 | **a pattern**: a problem and the house's answer to it, with `file:line` | the repo's `docs/design/PATTERNS.md` (repo-specific) or this skill's `references/patterns.md` (true across repos) |
 | 4 | **a trap**: a tooling or environment fact that cost time | `references/traps.md` |
+| 5 | **a working note**: something about how the work went with the stakeholder — what he corrected, what he had to say twice, what turned out to be his call and not yours, what he hedged about and was right about | the Working Contract in `gates.md` |
+
+The fifth question exists because it is the one that got skipped. On 2026-09-14 the harvest for a two-day payment-page session produced six traps and five patterns, every one of them about the artifact, and nothing at all about the working relationship — until he asked "did you go through the behavioural things, what did I correct, how we worked?" Questions 1 to 4 cannot catch that omission: they all ask what the code taught you. This one asks what he taught you, and it is the half that decides how many rounds the next session takes. It fails the "already recorded" test often, and that is fine — check the Working Contract first and write nothing if it is there.
 
 A **do-not-copy** is a reusable with a negative sign: register it in the registry's do-NOT-copy section with the reason and the replacement.
 
-## The three tests (all three, or it is not saved)
+## The four tests (all four, or it is not saved)
 
 1. **Re-derivation cost.** A fresh session would spend more than five minutes finding this out.
 2. **Stable.** It is not a one-off of this task. It will still be true next month.
 3. **Not already recorded.** Not in the code, the git history, CLAUDE.md, or one of the files above. Grep first.
+
+4. **Runnable.** If the entry prescribes a command, the command has been run on this machine, once, and its output seen. On 2026-09-14 an entry told every future session to wrap a vault write in `timeout 30`; macOS has no `timeout`, so the guarded command silently never ran. A grep of every session transcript found that failure **95 times across 12 sessions and three projects**, unrecorded for months, while the entry prescribing it sat in the learnings file. **A wrong entry is worse than no entry, because it prescribes the failure and the failure is silent.**
 
 ## How an entry looks
 

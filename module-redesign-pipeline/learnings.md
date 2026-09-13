@@ -79,6 +79,43 @@ Entries are dated, newest first. Each one names the correction, the cost, and th
 
 ---
 
+## 2026-09-07 — brand site kit, the round that built the locked direction
+
+### A locked artifact can carry a redundancy the build must not
+The lock drew the house plan and then a name-led inventory row underneath it that said the same
+thing again: eight marks beside "Single, 8 rooms, 8 beds", then a row reading "Single sharing,
+8 rooms, 8 beds free". Both were right in isolation and together they spent a thin page's whole
+budget saying one fact twice. Merging them into one row is what actually delivered the move the
+artifact ranked first (the name sets the row, the picture demotes to the right), because the
+photo-led and no-photo rows then differ only in what sits in that slot.
+
+**Rule produced:** at Phase 4, read the locked artifact as a design argument rather than as a
+layout to transcribe, and say out loud in the plan where the build leaves it and why. The lock
+is the direction and the reasons; the drawing is evidence for them, not a spec to trace.
+
+### A threshold reasoned from first principles was wrong until it met real data
+The drawn plan's ceiling was set at 48 marks with a perception argument: above that a row stops
+being a quantity somebody counts. Rendering it on Signet refused its real 58-bed and 57-bed
+tiers, which are the two rows on that page where the picture matters most, because "17 beds
+free" hides that the tier is seventy per cent full. What the drawing communicates is the
+proportion, not a count anybody makes, so the real ceiling is a layout one and it is 96.
+
+**Rule produced:** a threshold in a new primitive is not decided until it has been rendered
+against the widest real record in the benchmark set. Write the number, then go and find the row
+that argues with it.
+
+### The brand that was not being built for is where the regression is
+Changing a shared copy helper so a one-house brand leads on its street broke Signet, which
+leaves its headline unauthored on purpose and draws a vermilion full stop after the name the kit
+supplies. The swap turned that signature into "Malad.". Nothing in the tests or in the brand
+being built for showed it; a six-brand server render and a diff of the h1 did, and the same
+sweep found a second brand whose only address is a bare city.
+
+**Rule produced:** an edit to any shared copy or formatting helper gets rendered across the full
+benchmark set before it is committed, and the registered brands are read for what they
+deliberately leave out. A deliberate omission in a brand's content file is a dependency on the
+fallback, and it is invisible to a fixture.
+
 ## 2026-08-24 — Complaint Bot Setup, the session that produced the gates
 
 **Eleven corrections in one session, all of one shape: the rule existed and was not applied at the moment it mattered.** The expansion rule sat in CLAUDE.md in capitals and failed four times. So the remedy is not more prose; it is `references/gates.md` (three gates tied to moments), `scripts/ui-probe.js` + `scripts/run_probe.py` (numbers, not claims), and global hooks in `settings.json` that fire them. Built, tested against real hook payloads, and the probe run against the page that produced it (it found a real finding on its first run: five tap targets under 44px).
@@ -295,3 +332,138 @@ sweep, and STILL shipped the stat tiles fixed and the money-lines directly benea
 same card untouched. The expansion rule is not satisfied by sweeping for the pattern; it is
 satisfied by sweeping for the pattern AND then re-reading the file you just edited for the
 sibling sitting three lines below the thing you changed.
+
+## 2026-09-05 (late) — Agreement Template Library, PR 1 (kit + list) built live
+
+### "First PR = the kit alone" was a claim waiting to happen
+A kit with no consumer cannot be live-verified, and the 2026-08-27 rule says a token with no consumers is a claim. Amended at plan time: PR 1 = kit + the one screen every operator lands on. Real data then closed the mock arithmetic on its own, and exposed a second one the mock could never show.
+
+### Two frozen endpoints, two definitions of "tenant"
+The list rendered "198 of 174 tenants" on the first live load: numerator from `/agreementTemplate/list`, denominator from the home dashboard's `tenant_count`. Filed #964. **Rule produced:** on a frozen backend, a proportion's numerator and denominator must come from the same endpoint. When the list's rows partition the whole (each room and tenant on exactly one agreement), the list's own sums are the denominator, and the bars add up by construction.
+
+### The mock cannot show the legacy shape of the data
+The proposal drew `{{mustache}}` variables. Real agreements still carry pre-migration `em_*` tokens and rendered as raw text until the editor's own converter ran first. **Rule produced:** before drawing any document surface, open the oldest live record, not the newest.
+
+### Worktree hygiene that cost twenty minutes
+A fresh worktree has no `.env.local`, no `node_modules`, and (this repo) uses yarn, not npm ci. The app then calls `undefined/...` and retries in a loop that looks like a broken page. Copy `.env.local`, `yarn install`, then judge.
+
+### The revision was locked in prose and built without a second drawing
+The stakeholder rejected the built list on sight: "no header, no table, inline expansion etc - that's stupid."
+The accordion stack came from a revision he approved as a direction, never as a rendered page at real
+data, and it broke the house list shell (PeopleListHeader + CustomTable) that Rooms and Tenants use.
+**Rule produced:** a revision that changes the container of a locked surface needs its own Phase 3.5
+artifact at the real property's numbers before code. "Framing approval is not a go" applies to
+revisions too. And a list page in this app starts from the list shell; deviating from it is a
+decision to show, not to make.
+
+
+## 2026-09-07 — seven outside resources join the bar
+
+The stakeholder added react-spring, GSAP, anime.js, Lenis templates, shaders.com, ls.graphics and promptlibrary.org as standing resources for every redesign round. Rule produced: they are inputs to Phase 1.5 (reference) and Phase 6 (motion), routed through `references/motion-and-reference-libraries.md`, and never a reason to add a dependency without the ladder line in the ledger. Shaders draw only at Tier 3, mockups never on the app section.
+
+2026-09-07, later: he asked whether the resources were added the way a top 1% designer would use them. They were not; the first draft was only guards. Rule: any resource ruling carries two halves, the study routine and named moves (how to use), and the ladder and tiers (where it may draw). One signature move per page.
+
+### A narrow check that only looks for overflow is half a check
+Every narrow pass in the drawn-house round was made at 500px, because `resize_page` floors there,
+and all of them asked the same question: does the page scroll sideways. It never did. Emulating a
+real 390px phone (`emulate` with `390x844x3,mobile,touch`) and measuring every tap target in the
+one flow a renter actually uses found two controls under the 44px floor that sixteen other files in
+the same kit already hold: the fourteen day chips at 37px, and the escape-hatch link at about 18px.
+**Rule produced:** a narrow pass measures the interactive elements of the flow, not only the page
+box, and it runs at the width of a real phone. `[...dlg.querySelectorAll('button, input, select,
+a')].filter(el => el.getBoundingClientRect().height < 44)` is the whole check.
+
+### The backend requirement is a diff, not a description
+"#686, the backend requirement" turned into a useful deliverable only after the payload was read at
+source for seven brands, the same houses counted in the database, and the two `select` arrays that
+drop the columns found by line number. The issue's own framing (one brand, two fields, a serializer
+question) was wrong on all three counts. **Rule produced:** a requirement written for another repo
+names the file, the line, the exact strings to add, and the one command that proves it after the
+deploy. And it names the half that is ours: the section asking for the data was not ready to draw
+it, which is a second issue, not a footnote.
+
+### A ground that looks right is not a ground that is right
+The Tier 3 atmosphere shipped on a desktop screenshot I was happy with. Told to continue only if
+satisfied, I went back and measured instead of looking, and found four defects the screenshot had
+hidden: one of three pools never drew at all (the rules were `nth-child` and the shader is the
+container's first child, so every rule was off by one), the phone got a near-flat version because
+the pools were sized in `vmax` off the long edge, `will-change` pinned three full-viewport blurred
+layers in GPU memory for the life of the page, and the shader kept drawing after the hero scrolled
+away despite "paused off screen" being in my own budget note for the round.
+**Rule produced:** after a decorative layer looks right, enumerate its elements in the browser and
+assert on their computed size, position, on-screen fraction and lifecycle. A composite that looks
+good can be missing a layer, and the better it looks the less likely anyone goes back.
+
+## A number that passes against a token can fail on the screen (7 September 2026)
+
+The kit's hero eyebrow cleared 4.62:1 against the `surface-dark` token and was actually rendering at
+**4.17:1**, because the hero's ground is a decorative layer — a scrim over blurred pools that drift
+for over a minute — and the pixels behind the text were rgb(31 31 34), not the token's rgb(21 21 23).
+It had been shipping that way while every check said it passed.
+
+Three rules came out of it, and they apply to any text over any non-flat ground:
+
+1. **Hide the type before sampling the ground.** Antialiased glyph edges are intermediate colours; a
+   naive pixel sample picks them up and hands you a confident wrong number. Twice in one round it
+   reported a "ground" that was really the edge of a letter.
+2. **Pause the animation at both ends and take the brightest pixel under the whole type block**, not
+   the average and not one frame. A moving ground has no single number.
+3. **Bound the ground, do not lighten the text.** No text colour can be guaranteed against a
+   background that keeps changing. Then feed the measured worst case back as the reference the
+   tokens are built against.
+
+A fourth, specific to colour systems: **OKLCH lightness does not predict WCAG contrast.** Relative
+luminance weights green at 0.72 and blue at 0.07, so a magenta and a green at identical perceptual
+lightness differ by about 2:1 in ratio. "Fix the lightness and contrast is guaranteed" is wrong, and
+only a sweep across all 360 hues catches it — the real values in the database did not.
+
+## Look at the output before believing the extractor (7 September 2026)
+
+A pipeline that derived brand colour from owner logos reported "34 of 44 logos yielded a hue", which
+sounds like a working feature. Rendering a contact sheet of each logo beside the ramp it produced
+killed it in one look: a sixth of the `logo_url` values are photographs of buildings, and the chroma
+clamp collapsed five unrelated brands onto the same dusty rose. **A summary statistic cannot see
+that five rows are the same colour.** For anything that generates a visual, build the contact sheet
+before you build the pipeline — and check whether the data you already hold answers the question,
+because 903 owners had typed the colour in by hand.
+
+## Edit the named layer, not its frame (12 September 2026)
+
+A request to replace childish art inside a phone mockup was misread as permission to replace the
+phone composition itself. That destroyed the strongest product proof while solving the wrong layer.
+**Rule produced:** before a visual edit, name and lock the frame, the editable layer and the protected
+layers. "Inside the phone" means the device, position, scene and composition remain fixed. Source
+screens prove capability but do not set the art direction. Premium branded surfaces also pass an
+identity sweep: use the exact brand mark wherever the product or property is named, and reject
+invented marks, slogans, mascots and off-tone illustration before placement.
+
+## The states nobody rendered, and the harvest that forgot the human half (14 September 2026)
+
+Two days on the pay.rentok.com redesign produced a clean PR and five screens nobody had ever
+looked at: expired, not found, checking, failed, unsure. They existed in the code as branches, so
+no gate fired on them — Gate 1 fires on a new surface, Gate 2 on a claim of done. The expired one
+turned out to be what **68% of links arrive at**, the most-visited screen in the product, shipped
+with a 72px strip of an asset whose full version sat in the same file, and defended in a paragraph
+written without opening the render. All five were found by one stakeholder question: "did you
+redesign the expired page thoughtfully, or did you miss any?" **Rule produced: Gate 5, State
+Census** — enumerate the branches from the code rather than from memory, force each one, look at
+it, and count how many people reach it before deciding what it deserves. Sizing is what turned the
+expired screen from plumbing into a design.
+
+Three checks in the same session reported success without running: an overflow audit measured
+against `window.innerWidth`, which grows to contain the overflow; six verification scripts pointed
+at the port of the previous worktree; a secret scan that errored and printed "(empty = clean)",
+which was then pushed on. **Confirm a check could have failed before quoting it**, and never
+`scan && push` in one command.
+
+The harvest itself then failed in a way the harvest cannot catch. Six traps and five patterns were
+written, every one about the artifact, and nothing at all about the working relationship — until
+the stakeholder asked what he had corrected and how we had worked, and pointed out that he had
+never been told. Questions 1 to 4 all ask what the code taught you, so none of them notices that
+half. **Rule produced: a fifth harvest question, the working note**, routed to the Working Contract.
+Its first entries: his hedged observations ("could be just my mistake, but something feels off")
+were right three times out of three and must be measured rather than answered; "why is this here?"
+is a deletion question, not a request for a rationale; a ruling that inverts a default has to be
+swept through every place the old default is *described*, because the PR body came one sentence
+from reaching the reviewer contradicting his own decision; and "blocked on the backend" is not
+permission to ship a dead end — he had to supply the WhatsApp deep-link design himself.
