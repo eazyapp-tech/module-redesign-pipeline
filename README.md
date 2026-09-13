@@ -28,13 +28,15 @@ Both are made of a named person's own words, including their register when a rou
 
 ## The Designer's Gates (enforced, not just documented)
 
-Three checks tied to a moment in the work — not a rule pile someone has to remember. `references/gates.md` names them; two hooks in `~/.claude/settings.json` fire them whether or not anyone remembered, at the exact moment they matter. **Set up once per machine: `references/hooks-setup.md`.**
+Five checks tied to a moment in the work, not a rule pile someone has to remember. `references/gates.md` names them; two hooks in `~/.claude/settings.json` fire the two that a command can decide, whether or not anyone remembered, at the exact moment they matter. **Set up once per machine: `references/hooks-setup.md`.**
 
 | Gate | Fires when | Passes when |
 |---|---|---|
 | **1 · Surface Ready** | a new component file is created | seven answers exist and the stakeholder has seen them: what it IS, the question she came with, the internal precedent, two outside references (Mobbin), two rendered directions, the pick and why, what the spec gets wrong |
 | **2 · Done Probe** | `git commit` with a UI component staged | `scripts/run_probe.py` passes at 375 and an explicit 1440 (one centre per control row, sticky x unchanged after a pan, popovers portaled with a gutter, no 0px icons, flex peers within 2px, no sideways scroll, first-row y on the phone judged, nothing opened by a programmatic focus) and its output is in the commit message |
 | **3 · Shared Primitive** | editing tokens, primitives, a shared header, theme | consumers grepped first, one concern per function, the probe re-run on a consumer after |
+| **4 · Harvest** | any `git commit` | five questions answered with one line or "none" (rule, reusable, pattern, trap, working note), each passing four tests: worth more than five minutes to re-derive, stable, not already recorded, and runnable if it prescribes a command |
+| **5 · State Census** | before any module is called done | every screen-rendering branch listed from the code rather than from memory (early returns, status values, error/empty/loading, server-side redirects), each one forced, each one **looked at**, each judged against the same bar as the happy path. Exists because five states that lived in code as plumbing shipped unlooked-at, including the one most users actually land on |
 
 `references/gates.md` also holds the working contract with the stakeholder (lead with a pick, expand feedback before acting on it, their suggestion is an input not an order, say which of the seven is missing rather than claim 100%), the taste bar, and the code bar — this is where "the agent is the designer" becomes checkable rather than aspirational. Mined from a session with eleven corrections of one shape: a rule that existed as prose and still got broken, because the gap was never knowing the rule, it was the moment it should have fired.
 
@@ -62,7 +64,7 @@ Same pipeline, different tools per target — pick before Phase 4, record in the
 
 **As a personal skill** (per user):
 ```bash
-cp -R module-redesign-pipeline ~/.claude/skills/
+git clone https://github.com/eazyapp-tech/module-redesign-pipeline.git ~/.claude/skills/module-redesign-pipeline
 ```
 Restart Claude Code (or start a new session). It routes on asks like "redesign this module", "make X top 1%", "this looks generic/dated, fix it", or a resumed "continue the X redesign" session.
 
@@ -85,15 +87,15 @@ Mobbin MCP (reference screens) and the skills it orchestrates (`impeccable`, `in
 
 | File | What |
 |---|---|
-| `module-redesign-pipeline/SKILL.md` | The orchestrator — the phase pipeline, the one hard gate, platform profiles, design principles, red flags (rationalization counters), known gaps, and how it composes with `feature-design-pipeline`. |
-| `module-redesign-pipeline/PLAYBOOK.md` | Human-readable playbook — the pipeline linearly with the evidence per phase, and the round loop. Read/share this. |
-| `module-redesign-pipeline/references/redesign-ledger-template.md` | The `project_<module>-redesign.md` structure to copy for a new module — the observed section vocabulary (§IA SIGNED OFF, §BACKEND SCOPE, Surface Status, Shared-Surface Playbook, Verify Recipe...), the emoji/prepend-to-top living conventions, and the resume-prompt shape. |
-| `module-redesign-pipeline/references/component-registry-template.md` | The per-repo `docs/design/COMPONENT-REGISTRY.md` structure — canonical components (use / when-NOT-to-use / gotchas), layout recipes, tokens & hooks, house conventions, do-NOT-copy legacy list, extraction candidates, dated learnings. Lives in the target repo, versioned with the code. |
-| `module-redesign-pipeline/references/gates.md` | **The Designer's Gates.** Surface Ready / Done Probe / Shared Primitive, the working contract with the stakeholder, the taste bar, the code bar, environment traps. Read this before `SKILL.md` if you only read one file. |
-| `module-redesign-pipeline/references/hooks-setup.md` | The exact `settings.json` hook block that makes the gates fire, plus a verify snippet. Do this once per machine — a skill folder cannot wire hooks on its own. |
-| `module-redesign-pipeline/references/expansion-rule-worked-example.md` | A real audit round that failed the expansion rule, worked through step by step, plus the state-combination measurement rule (measure alignment with every toggle ON, not the default state). |
-| `module-redesign-pipeline/scripts/ui-probe.js` + `scripts/run_probe.py` | The Done Probe. A browser-side script that measures a live page (centre lines, sticky drift, popover portaling/gutter, icon widths, flex-peer widths, tap targets, focus leaks) and a Python/Playwright runner that drives it at any set of widths from one command. |
-| `module-redesign-pipeline/learnings.md` | Dated corrections, newest first, each with the rule it produced — read at the start of every round, append whenever one lands. |
+| `SKILL.md` | The orchestrator — the phase pipeline, the one hard gate, platform profiles, design principles, red flags (rationalization counters), known gaps, and how it composes with `feature-design-pipeline`. |
+| `PLAYBOOK.md` | Human-readable playbook — the pipeline linearly with the evidence per phase, and the round loop. Read/share this. |
+| `references/redesign-ledger-template.md` | The `project_<module>-redesign.md` structure to copy for a new module — the observed section vocabulary (§IA SIGNED OFF, §BACKEND SCOPE, Surface Status, Shared-Surface Playbook, Verify Recipe...), the emoji/prepend-to-top living conventions, and the resume-prompt shape. |
+| `references/component-registry-template.md` | The per-repo `docs/design/COMPONENT-REGISTRY.md` structure — canonical components (use / when-NOT-to-use / gotchas), layout recipes, tokens & hooks, house conventions, do-NOT-copy legacy list, extraction candidates, dated learnings. Lives in the target repo, versioned with the code. |
+| `references/gates.md` | **The Designer's Gates.** Surface Ready / Done Probe / Shared Primitive / Harvest / State Census, the working contract with the stakeholder, the taste bar, the code bar, environment traps. Read this before `SKILL.md` if you only read one file. |
+| `references/hooks-setup.md` | The exact `settings.json` hook block that makes the gates fire, plus a verify snippet. Do this once per machine — a skill folder cannot wire hooks on its own. |
+| `references/expansion-rule-worked-example.md` | A real audit round that failed the expansion rule, worked through step by step, plus the state-combination measurement rule (measure alignment with every toggle ON, not the default state). |
+| `scripts/ui-probe.js` + `scripts/run_probe.py` | The Done Probe. A browser-side script that measures a live page (centre lines, sticky drift, popover portaling/gutter, icon widths, flex-peer widths, tap targets, focus leaks) and a Python/Playwright runner that drives it at any set of widths from one command. |
+| `learnings.md` | Dated corrections, newest first, each with the rule it produced — read at the start of every round, append whenever one lands. |
 
 ## Relationship to feature-design-pipeline
 
