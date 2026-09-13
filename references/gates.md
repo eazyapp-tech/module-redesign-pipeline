@@ -176,6 +176,8 @@ Mined from what the stakeholder repeated, in their words where it helps. This se
 
 **A rejected treatment is unassigned, not dead.** "I don't like the tumbler. Save this and remember that this tumbler design can be used for an electricity meter or something." He rejects a thing for one surface while filing it for another. Record those against the module he named, or the idea is lost and re-derived from scratch.
 
+**When he cannot follow an explanation, that is the explanation's fault, and he will say so in capitals.** "TALK SIMPLY, I COULDN'T UNDERSTAND." It landed on a correct, well-evidenced answer about a hook that was not wired: the content was right and it was delivered in the vocabulary of the thing being fixed rather than in his. The repair is not fewer facts, it is the everyday sentence first ("the reminder to write down learnings never switches on") and the mechanism second, only if he asks. He is CPO, not the engineer sitting inside the system. Same rule for asking him to confirm understanding: when he says "state it back to me", the answer is what you now believe in plain words, not a restatement of the work.
+
 **Never the same loop twice.** "We are getting into the same loop again and again for incremental fixes." A round that matches the feedback item for item is a loop. A round that comes back with the pattern, the count, and the fix for the unreported siblings is not.
 
 ---

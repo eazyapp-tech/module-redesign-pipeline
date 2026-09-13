@@ -95,3 +95,10 @@ Keyed by what you were trying to do. Append one line when a trap costs time; del
 | gate a push on a scan in one command | `scan && push` proceeds when the scan's own regex errors, and an inline `|| echo "clean"` prints clean on failure | run the scan as its own call, read its verdict, then push. A scan that cannot fail is worse than none because its green line is used as evidence |
 | review money code adversarially | `/thermos` is reserved for explicit user invocation and cannot be called by the model or reconstructed | dispatch the available review agents in parallel, and add a different model family: `codex exec --skip-git-repo-check -c model_reasoning_effort=high "<prompt>"` from the worktree. Tell each to assume at least one bug exists |
 | screenshot a component whose image source is set in an effect | the SSR HTML contains no `<img src>`, so an HTML probe reports the art missing while the render shows it | assert on the screenshot for art, on the HTML for text and structure |
+
+## A live hook can block the very command that would fix it
+
+Moving a hook's script and repointing `settings.json` afterwards locks Bash out: the hook errors on
+every command, including the one that would correct the path. Repoint `settings.json` FIRST, then
+move the file. If already stuck, edit `settings.json` with the Edit tool, which does not pass
+through the Bash matcher.
