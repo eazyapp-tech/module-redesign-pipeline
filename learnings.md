@@ -442,7 +442,7 @@ invented marks, slogans, mascots and off-tone illustration before placement.
 Two days on the pay.rentok.com redesign produced a clean PR and five screens nobody had ever
 looked at: expired, not found, checking, failed, unsure. They existed in the code as branches, so
 no gate fired on them — Gate 1 fires on a new surface, Gate 2 on a claim of done. The expired one
-turned out to be what **68% of links arrive at**, the most-visited screen in the product, shipped
+turned out to be what **most arrivals land on**, the most-visited screen in the product, shipped
 with a 72px strip of an asset whose full version sat in the same file, and defended in a paragraph
 written without opening the render. All five were found by one stakeholder question: "did you
 redesign the expired page thoughtfully, or did you miss any?" **Rule produced: Gate 5, State

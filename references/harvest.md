@@ -2,7 +2,7 @@
 
 **Why this gate exists.** Every session re-derives the same facts: which token exists, which helper matches by id and not by name, that there are six hand-rolled dropzones, that the preview pane is 800px. The origin sessions ran the same Explore agents again and again and threw the answers away. "Update the registry at round close" was prose, and prose does not fire. This is the moment it fires.
 
-**The hook.** Any `git commit` fires it. The handoff checklist fires it again.
+**The hook.** `~/agent-config/hooks/harvest_gate.py`, wired into `PreToolUse` on `Bash`: any `git commit` fires it. The handoff checklist fires it again. (Until 14 September 2026 this sentence was a claim and no hook existed, which is why a four-day project ended with question 5 unanswered until the stakeholder asked for it.)
 
 ## The five questions (answer each with one line, or "none")
 

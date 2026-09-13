@@ -1,6 +1,6 @@
 # Wiring the Gates (do this once per machine)
 
-The skill files (`SKILL.md`, `references/gates.md`, `scripts/`) only give an agent the *rules*. **Enforcement is two hooks in `~/.claude/settings.json`**, which is a per-user, per-machine file — it is not part of a skill and does not install itself when you copy the skill folder. Without this step, Gates 1 and 3 never fire, and nothing reminds anyone to run the Done Probe before a commit.
+The skill files (`SKILL.md`, `references/gates.md`, `scripts/`) only give an agent the *rules*. **Enforcement is three hooks in `~/.claude/settings.json`**, which is a per-user, per-machine file — it is not part of a skill and does not install itself when you copy the skill folder. Without this step, Gates 1 and 3 never fire, nothing reminds anyone to run the Done Probe before a commit, and nothing asks the five Harvest questions or raises the State Census.
 
 ## Prerequisites
 
@@ -56,15 +56,37 @@ You should see `Gate 1 would fire` for a path that doesn't exist yet on disk, an
 Claude Code skills are read-only reference material the agent loads into context; they cannot register hooks on their own, and a skill silently rewriting `settings.json` on first use would be a surprising, hard-to-audit side effect. So installing the skill gives you the *rules* immediately; wiring the hooks (this file) is what turns them into a *standard* nobody can skip by not reading — do both.
 
 
-## Gate 4: Harvest (third PreToolUse entry, matcher `Bash`)
+## Gates 4 and 5: Harvest and State Census (third PreToolUse entry, matcher `Bash`)
 
-Fires on any command containing `git commit`. Injects the four harvest questions, the three tests, and the rot command. Add as a third object in `hooks.PreToolUse`:
+Until 14 September 2026 this section carried a placeholder that said to copy the hook "from the
+machine that has it". No machine had it. Both gates were documented as hook-fired and neither was,
+and the predicted thing happened: a four-day project ended with the Harvest working note unwritten
+until the stakeholder asked for it. The hook is now a real script in this skill.
 
 ```json
 {
   "matcher": "Bash",
-  "hooks": [{ "type": "command", "command": "jq -r '.tool_input.command // empty' | { read -r c; case \"$c\" in *'git commit'*) printf '%s' '{\"hookSpecificOutput\": {\"hookEventName\": \"PreToolUse\", \"additionalContext\": \"Gate 4, Harvest. ... (copy from ~/.claude/settings.json on the machine that has it, or from references/harvest.md)\"}, \"suppressOutput\": true}' ;; esac; }" }]
+  "hooks": [{ "type": "command", "command": "python3 \"$HOME/.claude/skills/module-redesign-pipeline/scripts/harvest_gate.py\"" }]
 }
 ```
 
-Test: `echo '{"tool_input":{"command":"git commit -m x"}}' | bash -c "<command>"` prints the context; `git status` prints nothing.
+`scripts/harvest_gate.py` raises **Gate 4 (Harvest)** on any `git commit`, and adds **Gate 5 (State
+Census)** when the staged diff carries UI, because that is when unrendered states ship.
+
+Two details in it that took two wrong versions to get right, both worth keeping if you rewrite it:
+
+- **Match the command being run, not text that mentions it.** A plain `"git commit" in cmd` test
+  fired the gate twice within minutes of being wired, on commands that merely contained the phrase
+  inside a quoted string. It strips quoted spans first, then requires a command boundary (start of
+  line, or after `;` `&&` `||` `|`).
+- **Bias toward firing.** A missed real commit is the failure the gate exists to prevent; a spurious
+  reminder costs a few lines.
+
+Verify, and make it fail on purpose before trusting it:
+
+```bash
+# must print context
+echo '{"tool_input":{"command":"git commit -m x"}}' | python3 ~/.claude/skills/module-redesign-pipeline/scripts/harvest_gate.py
+# must print nothing
+echo '{"tool_input":{"command":"git status"}}' | python3 ~/.claude/skills/module-redesign-pipeline/scripts/harvest_gate.py
+```

@@ -10,7 +10,7 @@ Five gates, one contract, one probe. Everything else is in the skill.
 as `GATES.md`. Gate 2 and Gate 4 carry a command and decide themselves; the rest stay manual
 because no command can decide them. This file is the why, that ledger is the check.
 
-**Enforcement is not automatic on install.** These gates fire because two hooks are wired into `~/.claude/settings.json` — a per-machine file a skill cannot write on its own. Set them up once with `references/hooks-setup.md`, or this file is rules again, not gates.
+**Enforcement is not automatic on install.** These gates fire because three hooks are wired into `~/.claude/settings.json` — a per-machine file a skill cannot write on its own. Set them up once with `references/hooks-setup.md`, or this file is rules again, not gates.
 
 ---
 
@@ -113,7 +113,7 @@ After the edit:
 
 ## Gate 5: State Census (before any module is called done)
 
-Gate 1 fires when a surface is created. Gate 2 fires when you claim it works. **Neither fires for a state that already exists in the code and has never been rendered** — and that is exactly where five screens hid on the payment page: expired, not found, checking, failed, unsure. The expired one is what 68% of links arrive at, the most-visited screen in the whole product. It had been built as plumbing, shipped showing a 72px strip of an asset whose full version sat unused in the same file, and then defended in prose I wrote without ever looking at the render. The stakeholder found all five by asking one question: "did you redesign the expired page thoughtfully, or did you miss any?"
+Gate 1 fires when a surface is created. Gate 2 fires when you claim it works. **Neither fires for a state that already exists in the code and has never been rendered** — and that is exactly where five screens hid on the payment page: expired, not found, checking, failed, unsure. The expired one is where most arrivals actually land, the most-visited screen in the whole product. It had been built as plumbing, shipped showing a 72px strip of an asset whose full version sat unused in the same file, and then defended in prose I wrote without ever looking at the render. The stakeholder found all five by asking one question: "did you redesign the expired page thoughtfully, or did you miss any?"
 
 **The census is mechanical, and that is the point.** "List the states you designed" returns the states you thought about, which is the same set that already got attention. The list has to come from the code, because the code is the only list that includes what you forgot.
 
@@ -126,7 +126,7 @@ Gate 1 fires when a surface is created. Gate 2 fires when you claim it works. **
 
 **Sizing comes before taste, not after.** The expired screen only became worth designing once someone counted the links that had ever been sent, and over 90% of them were already dead. Run the count for each state in the census before deciding which ones deserve the effort, or the rarest-looking screen keeps getting the least work while being the one most people see.
 
-**The hook.** No command can decide this one. It rides the handoff checklist and the pre-push list, beside Gate 2.
+**The hook.** `~/agent-config/hooks/harvest_gate.py` raises it on any `git commit` whose staged diff carries UI, because that is when unrendered states ship. No command can decide whether it *passed*, so it also rides the handoff checklist and the pre-push list, beside Gate 2.
 
 ---
 
@@ -234,7 +234,7 @@ Mined from what the stakeholder repeated, in their words where it helps. This se
 
 Five questions, three tests, one script. Did this stretch produce a rule, a reusable, a pattern, a trap, **or a working note**? Each is one line in the right file or "none". The fifth is the one that gets skipped: the first four all ask what the code taught you, so none of them can notice that nothing was written down about how the work went with him. Saved only if a fresh session would spend more than five minutes re-deriving it, it is stable, it is not already recorded, and, when it prescribes a command, that command has been run here once and its output seen. Then `scripts/registry_rot.py` on the repo. Full text: `references/harvest.md`.
 
-**The hook.** Any `git commit` fires it.
+**The hook.** `~/agent-config/hooks/harvest_gate.py` on `PreToolUse` / `Bash`: any `git commit` fires it.
 
 ---
 
