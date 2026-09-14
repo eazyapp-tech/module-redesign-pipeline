@@ -88,3 +88,8 @@ Fixing the call site is not enough — the default at the destination swallows i
 **The house's answer.** Derive the step from the query and push it shallow, so the step has an address, costs no refetch, and leaves the figure she typed and the lists already on her phone alone. `pages/_sites/payment-pages/p2/[shortId]/pay.js:210` (`const cash = q.how === 'cash'`), pushed at `goCash`.
 **The tell.** The same screen reachable two ways, one with a URL and one without. That is one screen with two entrances and only one exit.
 
+## A detail route destroys the list it was opened from (eazypg-marketplace, 2026-09-14)
+**Problem.** Opening a record swaps the branch that renders the list, so the list component unmounts and every piece of state it held is gone. Coming back she gets the DEFAULT arrangement, which looks right, so no screenshot, no render check and no console ever shows it. On the payment page: read receipts, print the other seven, open one, press back, and she is on the bills tab with the list shut.
+**The house's answer.** The page owns the arrangement and keeps it in the address, carried through record opens by one named list. `pages/_sites/payment-pages/p2/[shortId]/index.js` (`KEEP`, extended from preview switches to `tab` and `rows`), `components/PayPage/Receipt.jsx` (takes `tab`/`rows` as props, holds no state at all now). Arranging is a `replace`, so her back key stays about the records she opened rather than her tab taps.
+**The tell.** A control whose effect disappears after a round trip you did not think of as navigation.
+

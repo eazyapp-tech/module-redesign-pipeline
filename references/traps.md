@@ -120,3 +120,7 @@ Separate from "`next build` corrupts `.next` if dev is live". The dev server wat
 Walking all fifteen payment-page bench links back to back drew `429` from `apiv2.rentok.com`, and the state that happened to land in the throttle rendered late. A loop with a fixed `waitForTimeout` then reported it as "tapping Pay does nothing", which is a false P1 on a money path. Re-run on its own it navigated in one second.
 Two habits: wait on the thing (`waitForURL`, `waitForLoadState`) rather than on a clock, and **re-run any single failing state alone before writing it up.** A state that fails in a sweep and passes alone is the sweep's fault, not the page's.
 
+## A restore chained after a long command may never run, and leaves broken code in the tree (2026-09-14)
+Breaking code on purpose to prove a check catches it is the right habit, and the restore is the dangerous half. `sed -i '' 's/GOOD/BROKEN/' file && node long-check.mjs; cp backup file` looks safe. In this harness a command over 120s is moved to the background, and the restore did not take: the file still carried `// BROKEN ON PURPOSE` afterwards, and the notification said the command completed with exit 0.
+**Verify the restore, never assume it.** Grep the tree for the marker as its own step: `grep -rn 'BROKEN ON PURPOSE' <paths>` should print nothing before you commit. Better, put a unique marker in every deliberate break precisely so one grep finds all of them, and never chain the restore behind the check.
+
