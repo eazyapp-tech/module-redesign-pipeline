@@ -116,3 +116,7 @@ Match the route, never the host: `/\/p2\/[^/]+\/pay(\?|$)/`, or test `location.p
 ## Editing next.config.js kills a running `next dev` (2026-09-14)
 Separate from "`next build` corrupts `.next` if dev is live". The dev server watches the config and reloads it, so a config edited to add a temporary `distDir` takes the server down the moment it is saved, and a syntax error in that edit takes it down silently: the next request answers nothing and the failure looks like the code. If a build has to run beside a dev server, expect to restart dev afterwards and verify it answers 200 before trusting any check you run next.
 
+## A sweep over many states rate-limits the production API, and a slow state looks like a broken one (2026-09-14)
+Walking all fifteen payment-page bench links back to back drew `429` from `apiv2.rentok.com`, and the state that happened to land in the throttle rendered late. A loop with a fixed `waitForTimeout` then reported it as "tapping Pay does nothing", which is a false P1 on a money path. Re-run on its own it navigated in one second.
+Two habits: wait on the thing (`waitForURL`, `waitForLoadState`) rather than on a clock, and **re-run any single failing state alone before writing it up.** A state that fails in a sweep and passes alone is the sweep's fault, not the page's.
+
