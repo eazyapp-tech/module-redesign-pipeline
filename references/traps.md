@@ -102,3 +102,16 @@ Moving a hook's script and repointing `settings.json` afterwards locks Bash out:
 every command, including the one that would correct the path. Repoint `settings.json` FIRST, then
 move the file. If already stuck, edit `settings.json` with the Edit tool, which does not pass
 through the Bash matcher.
+
+## A back control that tests a framework internal can be dead from the day it is written (2026-09-14)
+Next's pages router in 13.5 writes `{url, as, options, __N, key}` into `history.state`. **There is no `idx`.** So the common `window.history.state?.idx > 0` test for "is there a step behind us" is false on every screen forever, and a back control built on it silently never steps back. On pay.rentok.com's `/p2` it had been dead since the day it was written and nothing showed, because the fallback lands on the same screen the step back would have.
+Check it in one line before trusting it, in a real browser on the real page: `await p.evaluate(() => window.history.state)`. If you see `key` and no `idx`, the test is dead.
+What works instead, with no framework dependency: capture `window.history.length` at module scope (so it is the length when the document loaded) and compare. A client-side step grows it; a fresh document reloads the module and the count restarts, which is exactly the case where a back would leave the site. `components/PayPage/Machine.jsx`, `hasStep()`.
+
+## A hostname can contain the path you are matching (2026-09-14)
+The payment page is served from `pay.localhost:3012`, so a Playwright `waitForURL(/\/pay/)` or any regex testing a full URL for `/pay` matches **every** page on that server, including the bill. It resolves instantly, the script races ahead of a navigation still in flight, and reports a failure that is not there. Cost a false "the fix does not work" on a fix that did.
+Match the route, never the host: `/\/p2\/[^/]+\/pay(\?|$)/`, or test `location.pathname` rather than `href`.
+
+## Editing next.config.js kills a running `next dev` (2026-09-14)
+Separate from "`next build` corrupts `.next` if dev is live". The dev server watches the config and reloads it, so a config edited to add a temporary `distDir` takes the server down the moment it is saved, and a syntax error in that edit takes it down silently: the next request answers nothing and the failure looks like the code. If a build has to run beside a dev server, expect to restart dev afterwards and verify it answers 200 before trusting any check you run next.
+

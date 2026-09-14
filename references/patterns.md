@@ -82,3 +82,9 @@ A 1px box with `clip-path: inset(50%)` is the visually-hidden idiom, and a geome
 `const amount = Number(payment?.amount) || total` is a lie generator: `Number(null)` is `0`, which is falsy, so a missing figure silently becomes the fallback. On a receipt that printed the tenant's entire outstanding as the sum she had just paid, sealed, with a real reference.
 
 Fixing the call site is not enough — the default at the destination swallows it. Make the value nullable and have every print site omit it. A receipt may show less than it knows; it may never show more.
+
+## A step she can be on is a step with an address (eazypg-marketplace, 2026-09-14)
+**Problem.** A step inside a screen held in component state looks identical on screen and is invisible to every render check, but it has no address. Her phone's back skips past it to whatever came before, a refresh throws away what she had done on it, and she cannot return to it or share it. On the payment page the cash step was `useState`, so the URL read `/pay` while the screen said "Pay in cash": back went to the bill rather than the amount screen, and a refresh lost the collector she had picked along with the code already sitting on his phone.
+**The house's answer.** Derive the step from the query and push it shallow, so the step has an address, costs no refetch, and leaves the figure she typed and the lists already on her phone alone. `pages/_sites/payment-pages/p2/[shortId]/pay.js:210` (`const cash = q.how === 'cash'`), pushed at `goCash`.
+**The tell.** The same screen reachable two ways, one with a URL and one without. That is one screen with two entrances and only one exit.
+
