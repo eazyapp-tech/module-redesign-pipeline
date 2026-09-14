@@ -124,3 +124,7 @@ Two habits: wait on the thing (`waitForURL`, `waitForLoadState`) rather than on 
 Breaking code on purpose to prove a check catches it is the right habit, and the restore is the dangerous half. `sed -i '' 's/GOOD/BROKEN/' file && node long-check.mjs; cp backup file` looks safe. In this harness a command over 120s is moved to the background, and the restore did not take: the file still carried `// BROKEN ON PURPOSE` afterwards, and the notification said the command completed with exit 0.
 **Verify the restore, never assume it.** Grep the tree for the marker as its own step: `grep -rn 'BROKEN ON PURPOSE' <paths>` should print nothing before you commit. Better, put a unique marker in every deliberate break precisely so one grep finds all of them, and never chain the restore behind the check.
 
+## A synthetic tap can fail to land while the page is perfectly fine (2026-09-14)
+Checking that a whole card was tappable, `page.mouse.click(x, y)` and `page.touchscreen.tap(x, y)` both did nothing at points where `document.elementFromPoint(x, y)` returned the right control AND clicking that control opened the record. Three rounds were spent suspecting the CSS, which was correct the whole time. `locator.click()` works; raw coordinates did not.
+For a question about REACH, ask the question hit-testing actually asks, in the page: what is under this point, and does that thing do the job. `elementFromPoint` at the corners and the centre, resolved with `closest()` to name which control was hit, answers it without depending on synthetic input landing at all.
+

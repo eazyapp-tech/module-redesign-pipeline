@@ -212,6 +212,8 @@ Mined from what the stakeholder repeated, in their words where it helps. This se
 
 **The sentence and the control under it must recommend the same thing.** When a message is softened because we are not certain, the action beside it has to move too, or the screen argues with itself in front of her. The payment page said "please check before paying again" and put a **Try again** key directly underneath, because the copy was rewritten to be honest and the flag choosing the action was left alone. On a money path that is an invitation to pay twice. Whenever you change what a screen SAYS about certainty, re-read what it OFFERS in the same breath, and treat the pair as one edit.
 
+**A card that looks like one object behaves like one.** If a row or card opens something, the reach of that action is the whole card, not the words inside it. Anything else on the card that has its own job sits above that reach and keeps it. The wrong version is invisible in every screenshot, because the half that does nothing looks exactly like the half that works: the payment page's bills had a button around the title and the dates, so a thumb on the amount, the date or the empty middle did nothing at all. The control still wraps only the words, for the screen reader and the focus ring; the reach is stretched over the card by a pseudo element, which is how a card gets one primary action without nesting one control inside another.
+
 **Group with space, never with lines.** Hairline dividers between actions turn a floating control into a spreadsheet toolbar.
 
 **One idiom per question.** Two controls that both mean "pick one of these" look the same, at the same height, on the same centre. Five hand-rolled copies of one control in one module is the most common slop.
