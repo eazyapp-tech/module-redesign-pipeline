@@ -51,14 +51,26 @@ function uiProbe(opts) {
     var cs = getComputedStyle(p)
     var horizontal = (cs.display.indexOf('flex') >= 0 && cs.flexDirection.indexOf('row') === 0) || cs.display.indexOf('grid') >= 0
     if (!horizontal) return
-    var items = kids.map(function (k) { var q = r(k); return { t: label(k), h: round(q.height), cy: round(q.top + q.height / 2), w: round(q.width) } })
-    var centres = items.map(function (i) { return i.cy }), heights = items.map(function (i) { return i.h })
-    var spread = Math.max.apply(null, centres) - Math.min.apply(null, centres)
-    var hSpread = Math.max.apply(null, heights) - Math.min.apply(null, heights)
-    var row = { items: items, centreSpread: spread, heightSpread: hSpread }
-    report.controlRows.push(row)
-    if (spread > 2) flag('centre', 'controls in one row on different centre lines (spread ' + spread + 'px): ' + items.map(function (i) { return i.t + '@' + i.cy }).join(', '))
-    if (hSpread > 2) flag('height', 'controls in one row at different heights (spread ' + hSpread + 'px): ' + items.map(function (i) { return i.t + ':' + i.h }).join(', '))
+    var all = kids.map(function (k) { var q = r(k); return { t: label(k), h: round(q.height), cy: round(q.top + q.height / 2), top: q.top, bottom: q.bottom, w: round(q.width) } })
+    // A wrapping flex or grid lays its children out on several lines. Only children that share a
+    // line (their boxes overlap vertically) are a row; comparing across lines flagged every
+    // correctly wrapped phone layout.
+    var lines = []
+    all.slice().sort(function (a, b) { return a.top - b.top }).forEach(function (i) {
+      var line = lines.find(function (l) { return i.top < l.bottom && i.bottom > l.top })
+      if (line) { line.items.push(i); line.top = Math.min(line.top, i.top); line.bottom = Math.max(line.bottom, i.bottom) }
+      else lines.push({ items: [i], top: i.top, bottom: i.bottom })
+    })
+    lines.forEach(function (line) {
+      var items = line.items
+      if (items.length < 2) return
+      var centres = items.map(function (i) { return i.cy }), heights = items.map(function (i) { return i.h })
+      var spread = Math.max.apply(null, centres) - Math.min.apply(null, centres)
+      var hSpread = Math.max.apply(null, heights) - Math.min.apply(null, heights)
+      report.controlRows.push({ items: items, centreSpread: spread, heightSpread: hSpread })
+      if (spread > 2) flag('centre', 'controls in one row on different centre lines (spread ' + spread + 'px): ' + items.map(function (i) { return i.t + '@' + i.cy }).join(', '))
+      if (hSpread > 2) flag('height', 'controls in one row at different heights (spread ' + hSpread + 'px): ' + items.map(function (i) { return i.t + ':' + i.h }).join(', '))
+    })
     // flex peers: only judge when the parent actually distributes width
     var peers = kids.filter(function (k) { return /^(1|1 1 0|1 1 0%|1 1 auto)/.test(getComputedStyle(k).flex) })
     if (peers.length >= 2) {
