@@ -231,3 +231,43 @@ canvas. Same bar, different technique.
 
 One signature move per page still holds, whatever the page has. A rich page is not the place to use
 all of them; it is the place to use the right one well.
+
+## Added 21 September 2026: open design and animation toolbox
+
+Sanchay supplied eight more sources. **All eight are available to use in concept work.** There is no
+commercial or factory-made permission gate while the studio is designing, prototyping and deciding
+what the experience should be. Use the real component, effect or tool when it helps make the concept
+clear. When the work is about to become a sold or live client deliverable, Sanchay makes the ruling:
+keep it, replace it with custom work, change the implementation or clear whatever permission is
+needed. The notes below record useful source facts; they are not limits on creative use.
+
+| Resource | What it opens for the studio | Practical facts |
+|---|---|---|
+| [React Bits](https://github.com/DavidHDev/react-bits) | More than 200 animated React components and tools for text, backgrounds, UI and micro-interactions. We can study, copy, adapt or integrate the parts that fit a brand | Its current MIT plus Commons Clause licence allows commercial use inside a site or product, but not sale or redistribution of the components themselves. Keep the required notice with a substantial copy |
+| [Awesome Design Tools, Animation Tools](https://github.com/goabstract/Awesome-Design-Tools#animation-tools) | A broad index of animation authoring, motion, prototyping and export tools | The index is MIT licensed. Each linked tool has its own terms, so check the original source when one is used |
+| [Manim Community](https://github.com/ManimCommunity/manim) | Programmatic animation for precise diagrams, explanations, transitions, films and custom visual sequences | It is a Python renderer that produces media rather than a browser interaction runtime. MIT licensed |
+| [tsParticles](https://github.com/tsparticles/tsparticles) | Live particles, fields, confetti, masks and interactive canvas effects across React and other web stacks | MIT licensed. It supports modular installs, including `@tsparticles/engine` with smaller presets such as `@tsparticles/slim` |
+| [Vanta](https://github.com/tengbao/vanta) | Ready-made animated WebGL and p5 backgrounds that can sit behind any HTML surface | MIT licensed. Its README reports about 120 KB compressed, mostly Three.js. The upstream repository's last push was March 2024 when checked |
+| [GitHub animation topic, sorted by stars](https://github.com/topics/animations?o=desc&s=stars) | A changing source of animation libraries, engines, experiments and techniques, ordered by community interest | Each result keeps its own licence and technical shape. Open the source repository before using it |
+| [FeralUI](https://feralui.dev/) | Playful, physics-driven React experiments including pull cords, tactile objects, animated maps, page-turning books, responsive materials and the Gradient Builder | It is a public showcase by mortspace. Individual components may point to their own source and terms. All are available for our concept work |
+| [DesignToolMark](https://designtoolmark.com/) | A changing directory across AI tools, interface design, graphics, icons, animation, 3D, fonts and related studio work | Use it as a broad discovery surface. Open a listed tool's own page when it enters the work |
+
+Use whichever tool best serves the brand idea and the intended experience. Do not dilute a concept
+because of a possible later commercial question. A live effect still ships with the ordinary standards
+for accessibility, performance, truthful content and graceful fallback. Those are finish-quality
+requirements, not creative permission gates.
+
+### Gradient Builder is a standard studio instrument
+
+[FeralUI Gradient Builder](https://feralui.dev/gradients) is useful across brands because it is an
+authoring system, not one preset. It supports more than twenty families including flow, mesh,
+aurora, grain, waves, linear, radial, conic, pixel and skyline forms. The studio can place and blend
+brand colours, tune falloff, distortion, movement and noise, compose text or imagery, check contrast,
+and export PNG, JPG, SVG, MP4, HTML, CSS or JSON. SVG output can also enter Figma as editable layers.
+
+**Use it in every brand's art-direction round.** Make two or three material studies from that
+brand's verified logo colours and photographs. Save the chosen recipe or JSON with the run so it can
+be reproduced. The result may become a hero field, photograph wash, section transition, card
+surface, campaign asset or no shipped surface at all. The tool is shared; the visible material is
+authored again for each brand. Reusing one preset across owners would turn a useful studio tool into
+a factory tell.
