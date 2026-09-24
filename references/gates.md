@@ -1457,3 +1457,27 @@ He ruled "someone else can approve" and I drew a "Someone else will approve" lin
 Two corrections in one build, and both were the same miss.
 - **"You left out E-nach as a mode."** R93 ruled that all five ways are designed. I gated e-NACH on a backend link that does not exist yet, so the preview hid a ruled way. Gating on live data is right for tenants. A ruled way must still appear in the preview with a sample.
 - **"What do other products show as e-NACH icon, research before creating images."** I generated two icons before looking at a single reference, and his first instinct ("bank icon, na?") was the right starting point. For any new icon or mark, pull references first: Mobbin, the official marks (NPCI brand guidelines), and gateway checkouts. Save the findings (ICON-RESEARCH.md) before any generate call.
+
+## Rule, added 2026-09-24: a pinned footer holds only what she presses
+
+Sanchay: no disclaimer, note, warning, alert or anything else in a footer. A pinned footer holds keys, links, controls such as the autopay tick, and the figure a key pays (a label and an amount). Every sentence becomes the page's last line, directly above the footer. Airbnb's confirm-and-pay keeps its consent line there, in the page. When a footer would have nothing to press, render no footer, and let the page say it. A disabled key says why on itself ("Enter an amount"). When the only action is to message someone, that message is the key (payment page: `components/PayPage/AskKey.jsx`). Payment-page check, run on 24 Sep and failing on the old code: `node scripts/paypage/footer-text.mjs <link code>`.
+
+## Working note, added 2026-09-24: a sweep is shown as a list before it is built
+
+For a rule that touches every screen, he said "show me the list before making changes". Post the full inventory first: screen, the text there today, and where it goes, with the keeps named. Then build what he approves. His follow-up on one row ("is this the same as pay in advance?") was a check that the move didn't drop an action. Answer it by tracing the branch in code, and check every other row the same way before building.
+
+## Working note, added 2026-09-24: a figure in a proposal is checked before he approves it
+
+My R94 option A said "UPI adds ₹48" and he approved it. Building it showed that ₹48 is the charge on her monthly rent, while the checkout's figure is whatever she pays (₹141 on ₹35,293). I stopped, said the approved text was wrong, and asked again. That was right, but it cost a round. Before any wording in an A/B carries a rupee figure, name the quantity it belongs to (per month, per payment, per transfer) and check that the surface shows that same quantity.
+
+## Working note, added 2026-09-24: a name from the backend is data, not copy
+In a copy pass I proposed dropping "Automatic" from due type names ("Automatic Late Fine" to "Late Fine") and built it when he approved the list. He reversed it: "Automatic Joining Fee" and "Joining Fee" are two different charges, and the word is what tells them apart. On the test tenant both existed, and I saw the paid summary drop from "4 more" to "3 more" and argued it was fine instead of reading it as the collision it was. **Rule:** a copy pass covers words we wrote. A name the backend sends (due type, property, room, person) is printed as sent; fixing its case is allowed, dropping or swapping words never is. When a rename makes two things read the same, that is the finding, not a side effect to explain away. Approval of a list does not make an item on it right: an item that edits data needs the data checked for collisions before it goes on the list.
+
+## Working note, added 2026-09-24: his one example is the rule, applied to every line
+He gave me a fact (coins come with every bill) and I rewrote the one line he could see was wrong into a line that repeated the obvious ("You keep your 17,000 Rent Coins, and still earn them"). He had to say it: "if nothing happens to the coin, why do you even need to show it... There is just one example. Did you take that in factor?" The same fault was in six more lines and one line was false ("No fee from RentOk" beside a ₹15 fee). **Rule:** a consequence or pitch line names only what changes or what the thing adds. A line about what stays needs a mistake it prevents, named. When he corrects one line, re-derive the principle and run it over every line of that kind before answering, not after.
+
+## Working note, added 2026-09-24: read a rule's scope before calling it a requirement
+I told him NPCI's guideline made the UPI AutoPay lockup "a requirement, not polish" on our screens, and rendered it into six. He said "I'm skeptical, might look odd". Re-reading with his doubt, the "must use" sits in the ads, posters and social pages; NPCI's own merchant checkout (p8) shows the plain UPI mark with words, which is what we already had. **Rule:** when a guideline says "must", find the section it sits in and the example it gives for our kind of screen before quoting it as binding. His aesthetic doubt was the check that caught it.
+## Working note, added 2026-09-24: an icon complaint wants a better icon, not a word
+
+**An icon complaint wants a better icon, not a word**. He said the edit pencil looked old; I swapped it for the text "Change" and he came back: "Can you not find or use a better icon". Draw icon options first (bare glyph, glyph in a tinted round button, a filled glyph, the row's own chevron) in the real rows; offer text only as one option among them.

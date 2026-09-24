@@ -155,12 +155,21 @@ function uiProbe(opts) {
   // and credit a control inside a >=44px control (a pill inside a 44px cell).
   if (vw < 768) {
     var INTER = 'button, a[href], input, select, [role="button"], [role="checkbox"]'
+    // A pinned layer over the edge of the reach is the same scroll position as one over the
+    // centre (2026-09-25: a bill key flush on the pinned footer read 38, and 45 once scrolled),
+    // so the walk looks through sticky and fixed layers that do not hold the control.
+    var pinned = function (n) { for (; n && n !== document.body; n = n.parentElement) { var p = getComputedStyle(n).position; if (p === 'sticky' || p === 'fixed') return n } return null }
+    var hit = function (el, x, y) {
+      var s = document.elementsFromPoint(x, y)
+      for (var i = 0; i < s.length; i++) { var o = pinned(s[i]); if (!o || o.contains(el)) return s[i] }
+      return null
+    }
     var reach = function (el) {
       var q = r(el)
       var cx = Math.min(vw - 1, Math.max(1, q.left + q.width / 2)), cy = q.top + q.height / 2
       var up = 0, down = 0, d, h
-      for (d = 1; d <= 30; d++) { h = document.elementFromPoint(cx, cy - d); if (h && el.contains(h)) up = d; else break }
-      for (d = 1; d <= 30; d++) { h = document.elementFromPoint(cx, cy + d); if (h && el.contains(h)) down = d; else break }
+      for (d = 1; d <= 30; d++) { h = hit(el, cx, cy - d); if (h && el.contains(h)) up = d; else break }
+      for (d = 1; d <= 30; d++) { h = hit(el, cx, cy + d); if (h && el.contains(h)) down = d; else break }
       return Math.max(q.height, up + down)
     }
     var small = [], offScreen = 0, covered = 0

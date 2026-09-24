@@ -466,4 +466,11 @@ were right three times out of three and must be measured rather than answered; "
 is a deletion question, not a request for a rationale; a ruling that inverts a default has to be
 swept through every place the old default is *described*, because the PR body came one sentence
 from reaching the reviewer contradicting his own decision; and "blocked on the backend" is not
-permission to ship a dead end — he had to supply the WhatsApp deep-link design himself.
+permission to ship a dead end , he had to supply the WhatsApp deep-link design himself.
+
+- 2026-09-15 | Measured a P1 bug, proved its mechanism, and was one step from
+  installing the fix when a check of the issue's own comments found the fix
+  already written and sitting in an open PR (#982, open 8 days, unreviewed).
+  | Before building a fix for a filed issue, read the issue's comments AND
+  `gh pr list --state open` for that module. An unreviewed PR looks exactly
+  like unfinished work from the code side. Nearly duplicated 56 lines.

@@ -40,6 +40,11 @@ def main() -> int:
     ap.add_argument("--wait", type=float, default=3.0)
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--headed", action="store_true")
+    # Playwright's bundled Chromium cannot decrypt cookies written by Google
+    # Chrome (they are encrypted with a Keychain key scoped to that browser), so
+    # a profile authed in real Chrome probes the LOGIN page instead of the screen.
+    # `--channel chrome` launches the installed Chrome against the same profile.
+    ap.add_argument("--channel", default=None)
     a = ap.parse_args()
 
     widths = [int(w) for w in a.widths.split(",")]
@@ -52,7 +57,7 @@ def main() -> int:
     failed = False
     with sync_playwright() as p:
         if a.profile:
-            ctx = p.chromium.launch_persistent_context(a.profile, headless=not a.headed, viewport={"width": widths[0], "height": 900})
+            ctx = p.chromium.launch_persistent_context(a.profile, headless=not a.headed, viewport={"width": widths[0], "height": 900}, **({"channel": a.channel} if a.channel else {}))
             page = ctx.pages[0] if ctx.pages else ctx.new_page()
         else:
             browser = p.chromium.launch(headless=not a.headed)
