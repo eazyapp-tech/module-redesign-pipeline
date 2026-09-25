@@ -1481,3 +1481,7 @@ I told him NPCI's guideline made the UPI AutoPay lockup "a requirement, not poli
 ## Working note, added 2026-09-24: an icon complaint wants a better icon, not a word
 
 **An icon complaint wants a better icon, not a word**. He said the edit pencil looked old; I swapped it for the text "Change" and he came back: "Can you not find or use a better icon". Draw icon options first (bare glyph, glyph in a tinted round button, a filled glyph, the row's own chevron) in the real rows; offer text only as one option among them.
+
+## Working note, added 2026-09-25: a tool for one person is a tool for anyone
+
+He asked for "Kamal to run this on his own", and when I asked quick-or-better he widened it: "today it is Kamal, later tonight Nimit, tomorrow anyone." Build a team tool for the unnamed next user from the first pass: a fixed address, no login, nothing on my machine they need, its own instructions, and a way to report back. The named person is the first user, not the scope.
